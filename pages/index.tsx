@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Search, Sparkles, TrendingUp, Code2, Github, Clock, Link as LinkIcon } from 'lucide-react';
+import { Search, Sparkles, TrendingUp, Code2, Github, Clock, Link as LinkIcon, History } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import RepoCard from '../components/RepoCard';
+import { saveSearchHistory } from '../utils/history';
 
 export default function Home() {
   const router = useRouter();
@@ -52,6 +53,9 @@ export default function Home() {
         const newHistory = [q, ...history.filter(h => h !== q)].slice(0, 5);
         setHistory(newHistory);
         localStorage.setItem('searchHistory', JSON.stringify(newHistory));
+        
+        // Save to history utility
+        saveSearchHistory(q, res.data.total);
       }
     } catch (error) {
       console.error('Search failed:', error);
@@ -123,9 +127,25 @@ export default function Home() {
               AI Codebase Recommender
             </h1>
           </div>
-          <p className="text-gray-300 text-lg">
+          <p className="text-gray-300 text-lg mb-4">
             Describe your project idea in plain language. Get the best GitHub repos instantly.
           </p>
+          <div className="flex items-center justify-center gap-3">
+            <button
+              onClick={() => router.push('/generator')}
+              className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold flex items-center gap-2 transition-colors"
+            >
+              <Sparkles className="w-5 h-5" />
+              Generate Custom Boilerplate
+            </button>
+            <button
+              onClick={() => router.push('/history')}
+              className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg font-semibold flex items-center gap-2 transition-colors"
+            >
+              <History className="w-5 h-5" />
+              History
+            </button>
+          </div>
         </motion.div>
 
         <motion.div

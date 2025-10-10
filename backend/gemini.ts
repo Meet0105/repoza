@@ -59,3 +59,15 @@ Provide folder structure and key files with brief descriptions.`;
         return 'Failed to generate boilerplate';
     }
 }
+
+export async function generateText(prompt: string): Promise<string> {
+    try {
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
+        const result = await model.generateContent(prompt);
+        const response = result.response;
+        return response.text();
+    } catch (error) {
+        console.error('Text generation error:', error);
+        throw error;
+    }
+}

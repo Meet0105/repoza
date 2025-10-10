@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Star, GitFork, Eye, AlertCircle, Code2, Calendar, Sparkles, ExternalLink, Copy, ArrowLeft, Folder, File, ChevronRight, ChevronDown, FolderOpen } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import Link from 'next/link';
+import { saveRepoHistory } from '../../../utils/history';
 
 // File tree node component
 function FileTreeNode({ node, level = 0 }: { node: any; level?: number }) {
@@ -94,11 +95,23 @@ export default function RepoDetails() {
         try {
             const res = await axios.get(`/api/repo-details?owner=${owner}&repo=${repo}`);
             setData(res.data);
-            
+
             // Process file tree into hierarchical structure
             if (res.data.fileTree) {
                 const tree = buildFileTree(res.data.fileTree);
                 setFileTree(tree);
+            }
+
+            // Save to history
+            if (res.data.repository) {
+                saveRepoHistory({
+                    owner: res.data.repository.owner.login,
+                    repo: res.data.repository.name,
+                    url: res.data.repository.html_url,
+                    description: res.data.repository.description || 'No description',
+                    language: res.data.repository.language || 'Unknown',
+                    stars: res.data.repository.stargazers_count,
+                });
             }
         } catch (err: any) {
             setError(err.response?.data?.error || 'Failed to load repository');
@@ -110,15 +123,15 @@ export default function RepoDetails() {
     // Build hierarchical file tree from flat array
     const buildFileTree = (files: any[]) => {
         const root: any = { name: 'root', type: 'tree', children: [] };
-        
+
         files.forEach((file: any) => {
             const parts = file.path.split('/');
             let current = root;
-            
+
             parts.forEach((part: string, idx: number) => {
                 const isLast = idx === parts.length - 1;
                 let child = current.children?.find((c: any) => c.name === part);
-                
+
                 if (!child) {
                     child = {
                         name: part,
@@ -129,11 +142,11 @@ export default function RepoDetails() {
                     if (!current.children) current.children = [];
                     current.children.push(child);
                 }
-                
+
                 current = child;
             });
         });
-        
+
         return root.children || [];
     };
 
