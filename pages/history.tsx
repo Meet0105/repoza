@@ -15,8 +15,10 @@ import {
   BoilerplateHistoryItem,
 } from '../utils/history';
 import axios from 'axios';
+import ProtectedRoute from '../components/ProtectedRoute';
+import Navbar from '../components/Navbar';
 
-export default function History() {
+function HistoryContent() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'search' | 'repo' | 'boilerplate'>('search');
   const [searchHistory, setSearchHistory] = useState<SearchHistoryItem[]>([]);
@@ -318,5 +320,15 @@ export default function History() {
         )}
       </div>
     </div>
+  );
+}
+
+
+export default function History() {
+  return (
+    <ProtectedRoute>
+      <Navbar />
+      <HistoryContent />
+    </ProtectedRoute>
   );
 }

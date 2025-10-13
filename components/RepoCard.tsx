@@ -44,11 +44,19 @@ export default function RepoCard({ repo, parsedQuery }: Props) {
           <Link href={`/repo/${repo.full_name.split('/')[0]}/${repo.full_name.split('/')[1]}`}>
             <h3 className="font-semibold text-lg text-white mb-1 hover:text-purple-400 cursor-pointer transition-colors">{repo.full_name}</h3>
           </Link>
-          {repo.language && (
-            <span className="inline-block px-2 py-1 text-xs bg-purple-600/30 text-purple-300 rounded">
-              {repo.language}
-            </span>
-          )}
+          <div className="flex items-center gap-2 mt-1">
+            {repo.language && (
+              <span className="inline-block px-2 py-1 text-xs bg-purple-600/30 text-purple-300 rounded">
+                {repo.language}
+              </span>
+            )}
+            {repo.aiRelevance !== undefined && repo.aiRelevance > 0 && (
+              <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-green-600/30 text-green-300 rounded">
+                <Sparkles className="w-3 h-3" />
+                {(repo.aiRelevance * 100).toFixed(0)}% match
+              </span>
+            )}
+          </div>
         </div>
         {repo.score && (
           <div className="text-xs text-purple-400 font-mono bg-purple-900/30 px-2 py-1 rounded">

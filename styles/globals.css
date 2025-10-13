@@ -2,6 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom slider styles for admin page */
+input[type="range"].slider {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[type="range"].slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #3b82f6;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+input[type="range"].slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #3b82f6;
+  cursor: pointer;
+  border-radius: 50%;
+  border: none;
+}
+
+input[type="range"].slider::-webkit-slider-thumb:hover {
+  background: #2563eb;
+}
+
+input[type="range"].slider::-moz-range-thumb:hover {
+  background: #2563eb;
+}
+
 /* Markdown Content Styling */
 .markdown-content {
   color: #e5e7eb;

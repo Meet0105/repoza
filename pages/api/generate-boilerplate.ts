@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import archiver from 'archiver';
 import { Readable } from 'stream';
+import { saveBoilerplate, logApiCall } from '../../backend/mongodb';
 
 interface Config {
   framework: string;
@@ -18,6 +19,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    // Log boilerplate generation
+    await saveBoilerplate(`${config.framework}-${config.language}`, config.language);
+    
     // Create archive
     const archive = archiver('zip', { zlib: { level: 9 } });
 

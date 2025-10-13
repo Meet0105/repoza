@@ -5,9 +5,12 @@ import { Star, GitFork, Eye, AlertCircle, Code2, Calendar, Sparkles, ExternalLin
 import ReactMarkdown from 'react-markdown';
 import Link from 'next/link';
 import { saveRepoHistory } from '../../../utils/history';
+import RepoQA from '../../../components/RepoQA';
+import DeployButton from '../../../components/DeployButton';
+import CodeViewer from '../../../components/CodeViewer';
 
 // File tree node component
-function FileTreeNode({ node, level = 0 }: { node: any; level?: number }) {
+function FileTreeNode({ node, level = 0, onFileClick }: { node: any; level?: number; onFileClick?: (path: string) => void }) {
     const [isOpen, setIsOpen] = useState(level < 2); // Auto-expand first 2 levels
     const isFolder = node.type === 'tree';
     const hasChildren = node.children && node.children.length > 0;
@@ -30,12 +33,20 @@ function FileTreeNode({ node, level = 0 }: { node: any; level?: number }) {
         return colors[ext || ''] || 'text-gray-400';
     };
 
+    const handleClick = () => {
+        if (isFolder) {
+            setIsOpen(!isOpen);
+        } else if (onFileClick) {
+            onFileClick(node.path);
+        }
+    };
+
     return (
         <div>
             <div
-                className={`flex items-center gap-2 py-1 px-2 hover:bg-white/5 rounded cursor-pointer transition-colors`}
+                className={`flex items-center gap-2 py-1 px-2 hover:bg-white/5 rounded cursor-pointer transition-colors ${!isFolder ? 'hover:bg-purple-900/20' : ''}`}
                 style={{ paddingLeft: `${level * 20 + 8}px` }}
-                onClick={() => isFolder && setIsOpen(!isOpen)}
+                onClick={handleClick}
             >
                 {isFolder ? (
                     <>
@@ -61,7 +72,7 @@ function FileTreeNode({ node, level = 0 }: { node: any; level?: number }) {
             {isFolder && isOpen && hasChildren && (
                 <div>
                     {node.children.map((child: any, idx: number) => (
-                        <FileTreeNode key={idx} node={child} level={level + 1} />
+                        <FileTreeNode key={idx} node={child} level={level + 1} onFileClick={onFileClick} />
                     ))}
                 </div>
             )}
@@ -82,6 +93,9 @@ export default function RepoDetails() {
     const [loadingSummary, setLoadingSummary] = useState(false);
     const [fileTree, setFileTree] = useState<any>(null);
     const [showFileTree, setShowFileTree] = useState(false);
+    const [isIndexed, setIsIndexed] = useState(false);
+    const [indexing, setIndexing] = useState(false);
+    const [selectedFile, setSelectedFile] = useState<string | null>(null);
 
     useEffect(() => {
         if (owner && repo) {
@@ -168,6 +182,31 @@ export default function RepoDetails() {
         }
     };
 
+    const handleIndexRepo = async () => {
+        if (!owner || !repo) return;
+        
+        setIndexing(true);
+        try {
+            const res = await axios.post('/api/repo-index', {
+                owner,
+                repo,
+                forceReindex: false,
+            });
+            
+            if (res.data.alreadyIndexed) {
+                alert('Repository is already indexed!');
+            } else {
+                alert(`Repository indexed successfully! ${res.data.chunksCreated} chunks created.`);
+            }
+            
+            setIsIndexed(true);
+        } catch (error: any) {
+            alert(error.response?.data?.error || 'Failed to index repository');
+        } finally {
+            setIndexing(false);
+        }
+    };
+
     const generateBoilerplate = async () => {
         setGenerating(true);
         setBoilerplate('Generating boilerplate...');
@@ -232,15 +271,23 @@ export default function RepoDetails() {
                                 <p className="text-gray-300 text-lg mb-4">{repository.description}</p>
                             )}
                         </div>
-                        <a
-                            href={repository.html_url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
-                        >
-                            <ExternalLink className="w-5 h-5" />
-                            View on GitHub
-                        </a>
+                        <div className="flex gap-3">
+                            <a
+                                href={repository.html_url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+                            >
+                                <ExternalLink className="w-5 h-5" />
+                                View on GitHub
+                            </a>
+                            <div className="w-48">
+                                <DeployButton
+                                    type="existing"
+                                    repoUrl={repository.html_url}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -375,14 +422,31 @@ export default function RepoDetails() {
                         </div>
                         {showFileTree && (
                             <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 border border-white/10 max-h-[500px] overflow-auto">
+                                <p className="text-xs text-gray-400 mb-3">
+                                    💡 Click on any file to view its code
+                                </p>
                                 <div className="font-mono text-sm">
                                     {fileTree.map((node: any, idx: number) => (
-                                        <FileTreeNode key={idx} node={node} />
+                                        <FileTreeNode 
+                                            key={idx} 
+                                            node={node} 
+                                            onFileClick={(path) => setSelectedFile(path)}
+                                        />
                                     ))}
                                 </div>
                             </div>
                         )}
                     </div>
+                )}
+
+                {/* Code Viewer Modal */}
+                {selectedFile && owner && repo && (
+                    <CodeViewer
+                        owner={owner as string}
+                        repo={repo as string}
+                        filePath={selectedFile}
+                        onClose={() => setSelectedFile(null)}
+                    />
                 )}
 
                 {/* README */}
@@ -396,6 +460,22 @@ export default function RepoDetails() {
                         </div>
                     </div>
                 )}
+
+                {/* AI Q&A Section */}
+                <div className="mb-8">
+                    <RepoQA
+                        repoId={`${owner}/${repo}`}
+                        isIndexed={isIndexed}
+                        onIndexRequest={handleIndexRepo}
+                    />
+                    {indexing && (
+                        <div className="mt-4 p-4 bg-purple-600/20 border border-purple-500/30 rounded-lg">
+                            <p className="text-purple-300 text-sm">
+                                🔄 Indexing repository... This may take a minute.
+                            </p>
+                        </div>
+                    )}
+                </div>
 
                 {/* Additional Info */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

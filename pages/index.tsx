@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import RepoCard from '../components/RepoCard';
 import { saveSearchHistory } from '../utils/history';
+import Navbar from '../components/Navbar';
+import FilterSort, { SortOption } from '../components/FilterSort';
 
 export default function Home() {
   const router = useRouter();
@@ -19,13 +21,19 @@ export default function Home() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
+  
+  // Filter and Sort states
+  const [sortOption, setSortOption] = useState<SortOption>('custom');
+  const [languageFilter, setLanguageFilter] = useState('all');
+  const [availableLanguages, setAvailableLanguages] = useState<string[]>([]);
+  const [useAI, setUseAI] = useState(true);
 
   useEffect(() => {
     const saved = localStorage.getItem('searchHistory');
     if (saved) setHistory(JSON.parse(saved));
   }, []);
 
-  const search = async (pageNum = 1) => {
+  const search = async (pageNum = 1, customSort?: SortOption, customLang?: string, customAI?: boolean) => {
     if (!q.trim()) return;
     setLoading(true);
     setShowBoilerplate(false);
@@ -36,7 +44,13 @@ export default function Home() {
     }
 
     try {
-      const res = await axios.post('/api/search', { query: q, page: pageNum });
+      const res = await axios.post('/api/search', { 
+        query: q, 
+        page: pageNum,
+        sortOption: customSort || sortOption,
+        languageFilter: customLang || languageFilter,
+        useAI: customAI !== undefined ? customAI : useAI
+      });
       const newRepos = res.data.repositories || [];
 
       if (pageNum === 1) {
@@ -47,6 +61,7 @@ export default function Home() {
 
       setParsedQuery(res.data.parsedQuery);
       setTotalCount(res.data.total || 0);
+      setAvailableLanguages(res.data.availableLanguages || []);
       setHasMore(newRepos.length === 12 && results.length + newRepos.length < res.data.total);
 
       if (pageNum === 1) {
@@ -80,6 +95,22 @@ export default function Home() {
     } catch (error) {
       setBoilerplate('Failed to generate boilerplate');
     }
+  };
+
+  // Filter and Sort handlers
+  const handleSortChange = (newSort: SortOption) => {
+    setSortOption(newSort);
+    search(1, newSort, languageFilter, useAI);
+  };
+
+  const handleLanguageChange = (newLang: string) => {
+    setLanguageFilter(newLang);
+    search(1, sortOption, newLang, useAI);
+  };
+
+  const handleUseAIChange = (newUseAI: boolean) => {
+    setUseAI(newUseAI);
+    search(1, sortOption, languageFilter, newUseAI);
   };
 
   const handlePasteRepoUrl = () => {
@@ -116,6 +147,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <div className="container mx-auto px-4 py-12 max-w-6xl">
+        {/* Navbar with Auth */}
+        <Navbar />
+
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -295,6 +329,18 @@ export default function Home() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
+            {/* Filter and Sort UI */}
+            <FilterSort
+              sortOption={sortOption}
+              onSortChange={handleSortChange}
+              languageFilter={languageFilter}
+              onLanguageChange={handleLanguageChange}
+              availableLanguages={availableLanguages}
+              useAI={useAI}
+              onUseAIChange={handleUseAIChange}
+              resultsCount={results.length}
+            />
+
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
                 <TrendingUp className="w-6 h-6 text-purple-400" />

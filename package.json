@@ -10,12 +10,15 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@pinecone-database/pinecone": "^6.1.2",
+    "@vercel/sdk": "^1.13.8",
     "archiver": "^6.0.1",
     "axios": "1.4.0",
     "framer-motion": "^11.0.0",
     "lucide-react": "^0.378.0",
     "mongodb": "^6.20.0",
     "next": "14.0.0",
+    "next-auth": "^4.24.11",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-markdown": "^10.1.0"

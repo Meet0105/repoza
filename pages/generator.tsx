@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Code2, Download, Sparkles, CheckCircle, Loader, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { saveBoilerplateHistory } from '../utils/history';
+import DeployButton from '../components/DeployButton';
 
 export default function Generator() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function Generator() {
   const [generating, setGenerating] = useState(false);
   const [progress, setProgress] = useState('');
   const [success, setSuccess] = useState(false);
+  const [generatedFiles, setGeneratedFiles] = useState<Record<string, string> | null>(null);
 
   const frameworks = [
     { id: 'nextjs', name: 'Next.js', desc: 'React framework with SSR' },
@@ -95,13 +97,18 @@ export default function Generator() {
       setTimeout(() => setProgress('🧰 Installing dependencies...'), 2000);
       setTimeout(() => setProgress('📦 Packaging project...'), 3000);
 
-      const res = await axios.post('/api/generate-boilerplate', config, {
+      // Generate ZIP for download
+      const zipRes = await axios.post('/api/generate-boilerplate', config, {
         responseType: 'blob',
       });
 
+      // Also get files as JSON for deployment
+      const filesRes = await axios.post('/api/generate-files', config);
+      setGeneratedFiles(filesRes.data.files);
+
       // Create download link
       const fileName = `repoza-${framework}-${language}.zip`;
-      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const url = window.URL.createObjectURL(new Blob([zipRes.data]));
       const link = document.createElement('a');
       link.href = url;
       link.setAttribute('download', fileName);
@@ -279,11 +286,29 @@ export default function Generator() {
             ) : (
               <>
                 <Download className="w-6 h-6" />
-                Generate Project
+                Generate & Download Project
               </>
             )}
           </button>
         </div>
+
+        {/* Deploy Button (shown after successful generation) */}
+        {success && generatedFiles && (
+          <div className="mt-4">
+            <DeployButton
+              type="boilerplate"
+              boilerplateData={{
+                name: `repoza-${framework}-${Date.now()}`,
+                description: description || `Generated ${framework} project with Repoza`,
+                files: generatedFiles,
+                framework,
+              }}
+              onSuccess={(data) => {
+                console.log('Deployment initiated:', data);
+              }}
+            />
+          </div>
+        )}
 
         {/* Selected Configuration Summary */}
         <div className="mt-6 p-4 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
