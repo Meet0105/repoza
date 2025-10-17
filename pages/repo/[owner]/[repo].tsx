@@ -1,13 +1,14 @@
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Star, GitFork, Eye, AlertCircle, Code2, Calendar, Sparkles, ExternalLink, Copy, ArrowLeft, Folder, File, ChevronRight, ChevronDown, FolderOpen } from 'lucide-react';
+import { Star, GitFork, Eye, AlertCircle, Code2, Calendar, Sparkles, ExternalLink, Copy, ArrowLeft, Folder, File, ChevronRight, ChevronDown, FolderOpen, Zap } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import Link from 'next/link';
 import { saveRepoHistory } from '../../../utils/history';
 import RepoQA from '../../../components/RepoQA';
 import DeployButton from '../../../components/DeployButton';
 import CodeViewer from '../../../components/CodeViewer';
+import CodeConverterModal from '../../../components/CodeConverterModal';
 
 // File tree node component
 function FileTreeNode({ node, level = 0, onFileClick }: { node: any; level?: number; onFileClick?: (path: string) => void }) {
@@ -96,6 +97,7 @@ export default function RepoDetails() {
     const [isIndexed, setIsIndexed] = useState(false);
     const [indexing, setIndexing] = useState(false);
     const [selectedFile, setSelectedFile] = useState<string | null>(null);
+    const [showConverter, setShowConverter] = useState(false);
 
     useEffect(() => {
         if (owner && repo) {
@@ -184,7 +186,7 @@ export default function RepoDetails() {
 
     const handleIndexRepo = async () => {
         if (!owner || !repo) return;
-        
+
         setIndexing(true);
         try {
             const res = await axios.post('/api/repo-index', {
@@ -192,13 +194,13 @@ export default function RepoDetails() {
                 repo,
                 forceReindex: false,
             });
-            
+
             if (res.data.alreadyIndexed) {
                 alert('Repository is already indexed!');
             } else {
                 alert(`Repository indexed successfully! ${res.data.chunksCreated} chunks created.`);
             }
-            
+
             setIsIndexed(true);
         } catch (error: any) {
             alert(error.response?.data?.error || 'Failed to index repository');
@@ -271,7 +273,7 @@ export default function RepoDetails() {
                                 <p className="text-gray-300 text-lg mb-4">{repository.description}</p>
                             )}
                         </div>
-                        <div className="flex gap-3">
+                        <div className="flex gap-3 flex-wrap">
                             <a
                                 href={repository.html_url}
                                 target="_blank"
@@ -281,6 +283,13 @@ export default function RepoDetails() {
                                 <ExternalLink className="w-5 h-5" />
                                 View on GitHub
                             </a>
+                            <button
+                                onClick={() => setShowConverter(true)}
+                                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-lg transition-colors font-semibold"
+                            >
+                                <Zap className="w-5 h-5" />
+                                Convert Code
+                            </button>
                             <div className="w-48">
                                 <DeployButton
                                     type="existing"
@@ -427,9 +436,9 @@ export default function RepoDetails() {
                                 </p>
                                 <div className="font-mono text-sm">
                                     {fileTree.map((node: any, idx: number) => (
-                                        <FileTreeNode 
-                                            key={idx} 
-                                            node={node} 
+                                        <FileTreeNode
+                                            key={idx}
+                                            node={node}
                                             onFileClick={(path) => setSelectedFile(path)}
                                         />
                                     ))}
@@ -498,6 +507,15 @@ export default function RepoDetails() {
                         <div className="text-white">{repository.license?.name || 'No license'}</div>
                     </div>
                 </div>
+
+                {/* Code Converter Modal */}
+                {showConverter && owner && repo && (
+                    <CodeConverterModal
+                        owner={owner as string}
+                        repo={repo as string}
+                        onClose={() => setShowConverter(false)}
+                    />
+                )}
             </div>
         </div>
     );
