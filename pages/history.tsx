@@ -96,58 +96,60 @@ function HistoryContent() {
     return date.toLocaleDateString();
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 mb-4">
-            <ArrowLeft className="w-4 h-4" />
-            Back to home
-          </Link>
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 text-white pt-20">
+            <div className="max-w-6xl mx-auto px-4 py-12">
+                {/* Header */}
+                <div className="mb-12 animate-slide-up">
+                    <Link href="/" className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 mb-6 transition-colors">
+                        <ArrowLeft className="w-4 h-4" />
+                        <span className="font-medium">Back to home</span>
+                    </Link>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Clock className="w-10 h-10 text-purple-400" />
-              <div>
-                <h1 className="text-4xl font-bold">History</h1>
-                <p className="text-gray-300 text-lg">Your searches, repos, and generated projects</p>
-              </div>
-            </div>
-            <button
-              onClick={handleClearAll}
-              className="flex items-center gap-2 px-4 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg transition-colors border border-red-500/30"
-            >
-              <Trash2 className="w-4 h-4" />
-              Clear All
-            </button>
-          </div>
-        </div>
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center shadow-lg">
+                                <Clock className="w-9 h-9 text-white" />
+                            </div>
+                            <div>
+                                <h1 className="text-5xl font-bold gradient-text-primary">History</h1>
+                                <p className="text-gray-300 text-lg mt-2">Your searches, repos, and generated projects</p>
+                            </div>
+                        </div>
+                        <button
+                            onClick={handleClearAll}
+                            className="flex items-center gap-2 px-5 py-3 glass-light hover:glass text-red-400 hover:text-red-300 rounded-xl transition-all duration-300 border border-red-500/30 hover:border-red-500/50 hover-lift"
+                        >
+                            <Trash2 className="w-5 h-5" />
+                            <span className="font-semibold">Clear All</span>
+                        </button>
+                    </div>
+                </div>
 
-        {/* Tabs */}
-        <div className="flex gap-2 mb-6 border-b border-white/10">
-          <button
-            onClick={() => setActiveTab('search')}
-            className={`flex items-center gap-2 px-6 py-3 font-semibold transition-colors border-b-2 ${
-              activeTab === 'search'
-                ? 'border-purple-500 text-white'
-                : 'border-transparent text-gray-400 hover:text-white'
-            }`}
-          >
-            <Search className="w-5 h-5" />
-            Searches ({searchHistory.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('repo')}
-            className={`flex items-center gap-2 px-6 py-3 font-semibold transition-colors border-b-2 ${
-              activeTab === 'repo'
-                ? 'border-purple-500 text-white'
-                : 'border-transparent text-gray-400 hover:text-white'
-            }`}
-          >
-            <Folder className="w-5 h-5" />
-            Repos ({repoHistory.length})
-          </button>
+                {/* Tabs */}
+                <div className="flex gap-3 mb-8 glass rounded-2xl p-2">
+                    <button
+                        onClick={() => setActiveTab('search')}
+                        className={`flex items-center gap-2 px-6 py-3 font-semibold transition-all duration-300 rounded-xl flex-1 ${activeTab === 'search'
+                                ? 'glass-strong text-white shadow-lg'
+                                : 'text-gray-400 hover:text-white hover:glass-light'
+                            }`}
+                    >
+                        <Search className="w-5 h-5" />
+                        <span>Searches</span>
+                        <span className="badge-cyan ml-auto">{searchHistory.length}</span>
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('repo')}
+                        className={`flex items-center gap-2 px-6 py-3 font-semibold transition-all duration-300 rounded-xl flex-1 ${activeTab === 'repo'
+                                ? 'glass-strong text-white shadow-lg'
+                                : 'text-gray-400 hover:text-white hover:glass-light'
+                            }`}
+                    >
+                        <Folder className="w-5 h-5" />
+                        <span>Repos</span>
+                        <span className="badge-purple ml-auto">{repoHistory.length}</span>
+                    </button>
           <button
             onClick={() => setActiveTab('boilerplate')}
             className={`flex items-center gap-2 px-6 py-3 font-semibold transition-colors border-b-2 ${
