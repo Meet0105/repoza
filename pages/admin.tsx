@@ -159,95 +159,99 @@ function AdminPageContent() {
     setSaving(false);
   };
 
-  return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2 flex items-center gap-3">
-            <Settings className="w-10 h-10" />
-            Admin Settings
-          </h1>
-          <p className="text-gray-400">Manage your Repoza configuration</p>
-        </div>
-
-        {/* Tabs */}
-        <div className="flex gap-2 mb-6 border-b border-gray-700 overflow-x-auto">
-          <TabButton
-            active={activeTab === 'api-keys'}
-            onClick={() => setActiveTab('api-keys')}
-            icon={<Key className="w-4 h-4" />}
-            label="API Keys"
-          />
-          <TabButton
-            active={activeTab === 'theme'}
-            onClick={() => setActiveTab('theme')}
-            icon={<Palette className="w-4 h-4" />}
-            label="Theme"
-          />
-          <TabButton
-            active={activeTab === 'ranking'}
-            onClick={() => setActiveTab('ranking')}
-            icon={<Sliders className="w-4 h-4" />}
-            label="Ranking"
-          />
-          <TabButton
-            active={activeTab === 'usage'}
-            onClick={() => setActiveTab('usage')}
-            icon={<BarChart3 className="w-4 h-4" />}
-            label="Usage"
-          />
-        </div>
-
-        {/* Message Display */}
-        {message && (
-          <div className="mb-6 p-4 bg-gray-800 rounded-lg border border-gray-700">
-            {message}
-          </div>
-        )}
-
-        {/* Tab Content */}
-        <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-          {activeTab === 'api-keys' && (
-            <div className="space-y-6">
-              <h2 className="text-2xl font-semibold mb-4">API Key Configuration</h2>
-              
-              <div>
-                <label className="block text-sm font-medium mb-2">GitHub API Token</label>
-                <div className="flex gap-2">
-                  <input
-                    type="password"
-                    value={apiKeys.githubToken}
-                    onChange={(e) => setApiKeys({ ...apiKeys, githubToken: e.target.value })}
-                    placeholder="ghp_xxxxxxxxxxxx"
-                    className="flex-1 bg-gray-900 border border-gray-600 rounded px-4 py-2 focus:outline-none focus:border-blue-500"
-                  />
-                  <button
-                    onClick={() => testApiKey('github')}
-                    className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded flex items-center gap-2"
-                  >
-                    <TestTube className="w-4 h-4" />
-                    Test
-                  </button>
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 text-white pt-20">
+            <div className="max-w-7xl mx-auto px-4 py-12">
+                {/* Header */}
+                <div className="mb-12 animate-slide-up">
+                    <div className="flex items-center gap-4 mb-4">
+                        <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center shadow-lg">
+                            <Settings className="w-9 h-9 text-white" />
+                        </div>
+                        <div>
+                            <h1 className="text-5xl font-bold gradient-text-primary">Admin Settings</h1>
+                            <p className="text-gray-300 text-lg mt-2">Manage your Repoza configuration</p>
+                        </div>
+                    </div>
                 </div>
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">Gemini API Key</label>
-                <div className="flex gap-2">
-                  <input
-                    type="password"
-                    value={apiKeys.geminiApiKey}
-                    onChange={(e) => setApiKeys({ ...apiKeys, geminiApiKey: e.target.value })}
-                    placeholder="AIzaSyxxxxxxxxxx"
-                    className="flex-1 bg-gray-900 border border-gray-600 rounded px-4 py-2 focus:outline-none focus:border-blue-500"
-                  />
-                  <button
-                    onClick={() => testApiKey('gemini')}
-                    className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded flex items-center gap-2"
-                  >
-                    <TestTube className="w-4 h-4" />
-                    Test
+                {/* Tabs */}
+                <div className="flex gap-3 mb-8 glass rounded-2xl p-2 overflow-x-auto">
+                    <TabButton
+                        active={activeTab === 'api-keys'}
+                        onClick={() => setActiveTab('api-keys')}
+                        icon={<Key className="w-4 h-4" />}
+                        label="API Keys"
+                    />
+                    <TabButton
+                        active={activeTab === 'theme'}
+                        onClick={() => setActiveTab('theme')}
+                        icon={<Palette className="w-4 h-4" />}
+                        label="Theme"
+                    />
+                    <TabButton
+                        active={activeTab === 'ranking'}
+                        onClick={() => setActiveTab('ranking')}
+                        icon={<Sliders className="w-4 h-4" />}
+                        label="Ranking"
+                    />
+                    <TabButton
+                        active={activeTab === 'usage'}
+                        onClick={() => setActiveTab('usage')}
+                        icon={<BarChart3 className="w-4 h-4" />}
+                        label="Usage"
+                    />
+                </div>
+
+                {/* Message Display */}
+                {message && (
+                    <div className="mb-6 glass-strong rounded-xl p-5 border border-cyan-500/30 animate-slide-up">
+                        <span className="text-white font-medium">{message}</span>
+                    </div>
+                )}
+
+                {/* Tab Content */}
+                <div className="glass rounded-2xl p-8 shadow-xl animate-slide-up">
+                    {activeTab === 'api-keys' && (
+                        <div className="space-y-8">
+                            <h2 className="text-3xl font-bold gradient-text-primary mb-6">API Key Configuration</h2>
+
+                            <div>
+                                <label className="block text-sm font-semibold text-cyan-400 mb-3">GitHub API Token</label>
+                                <div className="flex gap-3">
+                                    <input
+                                        type="password"
+                                        value={apiKeys.githubToken}
+                                        onChange={(e) => setApiKeys({ ...apiKeys, githubToken: e.target.value })}
+                                        placeholder="ghp_xxxxxxxxxxxx"
+                                        className="input flex-1"
+                                    />
+                                    <button
+                                        onClick={() => testApiKey('github')}
+                                        className="btn-outline flex items-center gap-2"
+                                    >
+                                        <TestTube className="w-4 h-4" />
+                                        <span>Test</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-semibold text-purple-400 mb-3">Gemini API Key</label>
+                                <div className="flex gap-3">
+                                    <input
+                                        type="password"
+                                        value={apiKeys.geminiApiKey}
+                                        onChange={(e) => setApiKeys({ ...apiKeys, geminiApiKey: e.target.value })}
+                                        placeholder="AIzaSyxxxxxxxxxx"
+                                        className="input flex-1"
+                                    />
+                                    <button
+                                        onClick={() => testApiKey('gemini')}
+                                        className="btn-outline flex items-center gap-2"
+                                    >
+                                        <TestTube className="w-4 h-4" />
+                                        <span>Test</span>
                   </button>
                 </div>
               </div>
@@ -405,19 +409,18 @@ function AdminPageContent() {
 }
 
 function TabButton({ active, onClick, icon, label }: any) {
-  return (
-    <button
-      onClick={onClick}
-      className={`px-4 py-3 flex items-center gap-2 border-b-2 transition-colors ${
-        active
-          ? 'border-blue-500 text-blue-500'
-          : 'border-transparent text-gray-400 hover:text-gray-300'
-      }`}
-    >
-      {icon}
-      <span className="whitespace-nowrap">{label}</span>
-    </button>
-  );
+    return (
+        <button
+            onClick={onClick}
+            className={`px-6 py-3 flex items-center gap-2 font-semibold transition-all duration-300 rounded-xl ${active
+                    ? 'glass-strong text-white shadow-lg'
+                    : 'text-gray-400 hover:text-white hover:glass-light'
+                }`}
+        >
+            {icon}
+            <span className="whitespace-nowrap">{label}</span>
+        </button>
+    );
 }
 
 function WeightSlider({ label, value, onChange }: { label: string; value: number; onChange: (val: number) => void }) {
