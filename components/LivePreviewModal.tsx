@@ -89,35 +89,48 @@ export default function LivePreviewModal({
                 filesCount: data.filesCount,
             }));
 
-            // Step 4: Embed StackBlitz project using SDK
-            if (iframeContainerRef.current) {
-                console.log('Embedding StackBlitz project from GitHub...');
-
-                // Use GitHub project embedding - StackBlitz will handle dependencies
-                const vm = await sdk.embedGithubProject(
-                    iframeContainerRef.current,
-                    `${owner}/${repo}`,
-                    {
-                        openFile: data.openFile || 'README.md',
-                        view: 'preview',
-                        height: 600,
-                        hideNavigation: false,
-                        hideDevTools: false,
-                        forceEmbedLayout: true,
-                    }
-                );
-
-                // Set the StackBlitz URL for "Open in StackBlitz" button
-                setStackblitzUrl(`https://stackblitz.com/github/${owner}/${repo}`);
-            }
-
-            // Step 5: Ready
+            // Step 4: Set status to ready first
             setState((prev) => ({
                 ...prev,
                 status: 'ready',
                 progress: 100,
                 message: 'Preview ready!',
             }));
+
+            // Step 5: Wait for DOM to update, then embed StackBlitz
+            await new Promise((resolve) => setTimeout(resolve, 100));
+
+            if (iframeContainerRef.current) {
+                console.log('Embedding StackBlitz project from GitHub...');
+                console.log(`Repository: ${owner}/${repo}`);
+
+                try {
+                    // Use GitHub project embedding - StackBlitz will handle dependencies
+                    const vm = await sdk.embedGithubProject(
+                        iframeContainerRef.current,
+                        `${owner}/${repo}`,
+                        {
+                            openFile: data.openFile || 'README.md',
+                            view: 'preview',
+                            height: 600,
+                            hideNavigation: false,
+                            hideDevTools: false,
+                            forceEmbedLayout: true,
+                        }
+                    );
+
+                    console.log('StackBlitz embedded successfully!', vm);
+
+                    // Set the StackBlitz URL for "Open in StackBlitz" button
+                    setStackblitzUrl(`https://stackblitz.com/github/${owner}/${repo}`);
+                } catch (embedError: any) {
+                    console.error('Error embedding StackBlitz:', embedError);
+                    throw new Error(`Failed to embed StackBlitz: ${embedError.message}`);
+                }
+            } else {
+                console.error('Container ref is null!');
+                throw new Error('Container element not found');
+            }
         } catch (error: any) {
             console.error('Error creating preview:', error);
             setState((prev) => ({
@@ -212,7 +225,7 @@ export default function LivePreviewModal({
                 </div>
 
                 {/* Content */}
-                <div className="h-full pb-20">
+                <div className="h-full" style={{ height: 'calc(100% - 64px)' }}>
                     {state.status === 'error' ? (
                         <div className="flex flex-col items-center justify-center h-full p-8">
                             <div className="text-red-500 text-6xl mb-4">⚠️</div>
@@ -230,6 +243,7 @@ export default function LivePreviewModal({
                             ref={iframeContainerRef}
                             className="w-full h-full"
                             id="stackblitz-container"
+                            style={{ minHeight: '600px' }}
                         />
                     ) : (
                         <div className="flex flex-col items-center justify-center h-full p-8">
