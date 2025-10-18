@@ -144,126 +144,164 @@ export default function Home() {
     'React Native app with Firebase',
   ];
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <div className="container mx-auto px-4 py-12 max-w-6xl">
-        {/* Navbar with Auth */}
-        <Navbar />
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800">
+            {/* Navbar with Auth */}
+            <Navbar />
 
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Code2 className="w-12 h-12 text-purple-400" />
-            <h1 className="text-5xl font-bold text-white">
-              AI Codebase Recommender
-            </h1>
-          </div>
-          <p className="text-gray-300 text-lg mb-4">
-            Describe your project idea in plain language. Get the best GitHub repos instantly.
-          </p>
-          <div className="flex items-center justify-center gap-3">
-            <button
-              onClick={() => router.push('/generator')}
-              className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold flex items-center gap-2 transition-colors"
-            >
-              <Sparkles className="w-5 h-5" />
-              Generate Custom Boilerplate
-            </button>
-            <button
-              onClick={() => router.push('/history')}
-              className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg font-semibold flex items-center gap-2 transition-colors"
-            >
-              <History className="w-5 h-5" />
-              History
-            </button>
-          </div>
-        </motion.div>
+            <div className="container mx-auto px-4 pt-24 pb-12 max-w-6xl">
+                {/* Hero Section */}
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-center mb-16"
+                >
+                    {/* Icon + Title */}
+                    <div className="flex items-center justify-center gap-4 mb-6">
+                        <div className="w-16 h-16 rounded-2xl gradient-ai flex items-center justify-center shadow-lg animate-pulse-glow">
+                            <Code2 className="w-9 h-9 text-white" />
+                        </div>
+                        <h1 className="text-6xl font-bold">
+                            <span className="gradient-text-primary">Repoza</span>
+                        </h1>
+                    </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-8"
-        >
-          {/* Search by Keyword */}
-          <div className="p-4 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
-            <div className="flex items-center gap-2 mb-3">
-              <Search className="w-5 h-5 text-purple-400" />
-              <span className="text-white font-semibold">Search by keyword</span>
-            </div>
-            <div className="flex gap-3">
-              <input
-                type="text"
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && search(1)}
-                placeholder="e.g., MERN stack blog with authentication..."
-                className="flex-1 px-6 py-4 rounded-lg bg-white/10 backdrop-blur-sm text-white placeholder-gray-400 border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-              <button
-                onClick={() => search()}
-                disabled={loading}
-                className="px-8 py-4 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 text-white rounded-lg font-semibold flex items-center gap-2 transition-colors"
-              >
-                <Search className="w-5 h-5" />
-                {loading ? 'Searching...' : 'Search'}
-              </button>
-            </div>
-          </div>
+                    {/* Subtitle */}
+                    <p className="text-xl text-gray-300 mb-3 max-w-3xl mx-auto">
+                        AI-Powered Repository Discovery & Code Generation Platform
+                    </p>
+                    <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
+                        Describe your project in plain language. Get the best GitHub repos instantly with AI-powered search, live preview, and code conversion.
+                    </p>
 
-          {/* OR Divider */}
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/10"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-slate-900 text-gray-400 font-semibold">OR</span>
-            </div>
-          </div>
+                    {/* CTA Buttons */}
+                    <div className="flex flex-wrap items-center justify-center gap-4">
+                        <button
+                            onClick={() => router.push('/generator')}
+                            className="btn-ai flex items-center gap-2 hover-lift"
+                        >
+                            <Sparkles className="w-5 h-5" />
+                            <span>Generate Boilerplate</span>
+                        </button>
+                        <button
+                            onClick={() => router.push('/history')}
+                            className="btn-outline flex items-center gap-2"
+                        >
+                            <History className="w-5 h-5" />
+                            <span>View History</span>
+                        </button>
+                    </div>
 
-          {/* Paste GitHub URL Section */}
-          <div className="p-4 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
-            <div className="flex items-center gap-2 mb-3">
-              <LinkIcon className="w-5 h-5 text-purple-400" />
-              <span className="text-white font-semibold">Or paste a GitHub repository URL</span>
-            </div>
-            <div className="flex gap-3">
-              <input
-                type="text"
-                value={repoUrl}
-                onChange={(e) => setRepoUrl(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handlePasteRepoUrl()}
-                placeholder="https://github.com/vercel/next.js"
-                className="flex-1 px-4 py-3 rounded-lg bg-white/10 backdrop-blur-sm text-white placeholder-gray-400 border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-              <button
-                onClick={handlePasteRepoUrl}
-                className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold flex items-center gap-2 transition-colors"
-              >
-                <LinkIcon className="w-5 h-5" />
-                View Repo
-              </button>
-            </div>
-          </div>
+                    {/* Feature Pills */}
+                    <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
+                        <span className="badge-cyan">
+                            <Sparkles className="w-3 h-3 mr-1" />
+                            AI-Powered
+                        </span>
+                        <span className="badge-purple">
+                            <Code2 className="w-3 h-3 mr-1" />
+                            Code Converter
+                        </span>
+                        <span className="badge-pink">
+                            <TrendingUp className="w-3 h-3 mr-1" />
+                            Live Preview
+                        </span>
+                        <span className="badge-green">
+                            <Github className="w-3 h-3 mr-1" />
+                            10M+ Repos
+                        </span>
+                    </div>
+                </motion.div>
 
-          <div className="mt-4 flex flex-wrap gap-2">
-            {examples.map((ex) => (
-              <button
-                key={ex}
-                onClick={() => setQ(ex)}
-                className="px-4 py-2 bg-white/5 hover:bg-white/10 text-gray-300 text-sm rounded-full border border-white/10 transition-colors"
-              >
-                {ex}
-              </button>
-            ))}
-          </div>
+                {/* Search Section */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="mb-12"
+                >
+                    {/* Search by Keyword */}
+                    <div className="glass rounded-xl p-6 shadow-lg hover-lift mb-6">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center">
+                                <Search className="w-5 h-5 text-white" />
+                            </div>
+                            <span className="text-white font-semibold text-lg">Search by Keyword</span>
+                        </div>
+                        <div className="flex gap-3">
+                            <input
+                                type="text"
+                                value={q}
+                                onChange={(e) => setQ(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && search(1)}
+                                placeholder="e.g., MERN stack blog with authentication..."
+                                className="input flex-1"
+                            />
+                            <button
+                                onClick={() => search()}
+                                disabled={loading}
+                                className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                            >
+                                <Search className="w-5 h-5" />
+                                <span>{loading ? 'Searching...' : 'Search'}</span>
+                            </button>
+                        </div>
+                    </div>
 
-          {history.length > 0 && (
-            <div className="mt-4">
-              <p className="text-gray-400 text-sm mb-2 flex items-center gap-2">
+                    {/* OR Divider */}
+                    <div className="relative my-8">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-white/10"></div>
+                        </div>
+                        <div className="relative flex justify-center text-sm">
+                            <span className="px-6 py-2 glass-light rounded-full text-gray-300 font-semibold">OR</span>
+                        </div>
+                    </div>
+
+                    {/* Paste GitHub URL Section */}
+                    <div className="glass rounded-xl p-6 shadow-lg hover-lift">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="w-10 h-10 rounded-lg gradient-code flex items-center justify-center">
+                                <LinkIcon className="w-5 h-5 text-white" />
+                            </div>
+                            <span className="text-white font-semibold text-lg">Paste GitHub Repository URL</span>
+                        </div>
+                        <div className="flex gap-3">
+                            <input
+                                type="text"
+                                value={repoUrl}
+                                onChange={(e) => setRepoUrl(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && handlePasteRepoUrl()}
+                                placeholder="https://github.com/vercel/next.js"
+                                className="input flex-1"
+                            />
+                            <button
+                                onClick={handlePasteRepoUrl}
+                                className="btn-primary flex items-center gap-2"
+                            >
+                                <LinkIcon className="w-5 h-5" />
+                                <span>View Repo</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Example Queries */}
+                    <div className="mt-6 flex flex-wrap gap-2">
+                        {examples.map((ex) => (
+                            <button
+                                key={ex}
+                                onClick={() => setQ(ex)}
+                                className="badge-cyan hover:bg-cyan-500/30 transition-all duration-300 cursor-pointer"
+                            >
+                                {ex}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Search History */}
+                    {history.length > 0 && (
+                        <div className="mt-6">
+                            <p className="text-gray-400 text-sm mb-3 flex items-center gap-2">
                 <Clock className="w-4 h-4" />
                 Recent Searches
               </p>
