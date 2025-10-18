@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@octokit/rest": "^22.0.0",
     "@pinecone-database/pinecone": "^6.1.2",
+    "@stackblitz/sdk": "^1.11.0",
     "@vercel/sdk": "^1.13.8",
     "archiver": "^6.0.1",
     "axios": "1.4.0",

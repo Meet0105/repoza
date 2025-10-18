@@ -9,6 +9,8 @@ import RepoQA from '../../../components/RepoQA';
 import DeployButton from '../../../components/DeployButton';
 import CodeViewer from '../../../components/CodeViewer';
 import CodeConverterModal from '../../../components/CodeConverterModal';
+import LivePreviewButton from '../../../components/LivePreviewButton';
+import LivePreviewModal from '../../../components/LivePreviewModal';
 
 // File tree node component
 function FileTreeNode({ node, level = 0, onFileClick }: { node: any; level?: number; onFileClick?: (path: string) => void }) {
@@ -98,6 +100,7 @@ export default function RepoDetails() {
     const [indexing, setIndexing] = useState(false);
     const [selectedFile, setSelectedFile] = useState<string | null>(null);
     const [showConverter, setShowConverter] = useState(false);
+    const [showLivePreview, setShowLivePreview] = useState(false);
 
     useEffect(() => {
         if (owner && repo) {
@@ -283,6 +286,12 @@ export default function RepoDetails() {
                                 <ExternalLink className="w-5 h-5" />
                                 View on GitHub
                             </a>
+                            <LivePreviewButton
+                                owner={owner as string}
+                                repo={repo as string}
+                                onPreviewReady={() => setShowLivePreview(true)}
+                                onError={(error) => alert(`Preview Error: ${error}`)}
+                            />
                             <button
                                 onClick={() => setShowConverter(true)}
                                 className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-lg transition-colors font-semibold"
@@ -514,6 +523,15 @@ export default function RepoDetails() {
                         owner={owner as string}
                         repo={repo as string}
                         onClose={() => setShowConverter(false)}
+                    />
+                )}
+
+                {/* Live Preview Modal */}
+                {showLivePreview && owner && repo && (
+                    <LivePreviewModal
+                        owner={owner as string}
+                        repo={repo as string}
+                        onClose={() => setShowLivePreview(false)}
                     />
                 )}
             </div>
