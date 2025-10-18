@@ -5,6 +5,7 @@ import { Code2, Download, Sparkles, CheckCircle, Loader, ArrowLeft } from 'lucid
 import Link from 'next/link';
 import { saveBoilerplateHistory } from '../utils/history';
 import DeployButton from '../components/DeployButton';
+import Navbar from '../components/Navbar';
 
 export default function Generator() {
   const router = useRouter();
@@ -138,8 +139,9 @@ export default function Generator() {
   };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 text-white pt-20">
-            <div className="max-w-6xl mx-auto px-4 py-12">
+        <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 text-white">
+            <Navbar />
+            <div className="max-w-6xl mx-auto px-4 pt-24 pb-12">
                 {/* Header */}
                 <div className="mb-12 animate-slide-up">
                     <Link href="/" className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 mb-6 transition-colors">
