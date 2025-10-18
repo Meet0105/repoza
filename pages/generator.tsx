@@ -8,135 +8,135 @@ import DeployButton from '../components/DeployButton';
 import Navbar from '../components/Navbar';
 
 export default function Generator() {
-  const router = useRouter();
-  const [framework, setFramework] = useState('nextjs');
-  const [language, setLanguage] = useState('typescript');
-  const [features, setFeatures] = useState<string[]>([]);
-  const [description, setDescription] = useState('');
-  const [generating, setGenerating] = useState(false);
-  const [progress, setProgress] = useState('');
-  const [success, setSuccess] = useState(false);
-  const [generatedFiles, setGeneratedFiles] = useState<Record<string, string> | null>(null);
+    const router = useRouter();
+    const [framework, setFramework] = useState('nextjs');
+    const [language, setLanguage] = useState('typescript');
+    const [features, setFeatures] = useState<string[]>([]);
+    const [description, setDescription] = useState('');
+    const [generating, setGenerating] = useState(false);
+    const [progress, setProgress] = useState('');
+    const [success, setSuccess] = useState(false);
+    const [generatedFiles, setGeneratedFiles] = useState<Record<string, string> | null>(null);
 
-  const frameworks = [
-    { id: 'nextjs', name: 'Next.js', desc: 'React framework with SSR' },
-    { id: 'react', name: 'React', desc: 'JavaScript library for UI' },
-    { id: 'vue', name: 'Vue.js', desc: 'Progressive JavaScript framework' },
-    { id: 'express', name: 'Express', desc: 'Node.js web framework' },
-    { id: 'fastapi', name: 'FastAPI', desc: 'Modern Python web framework' },
-  ];
+    const frameworks = [
+        { id: 'nextjs', name: 'Next.js', desc: 'React framework with SSR' },
+        { id: 'react', name: 'React', desc: 'JavaScript library for UI' },
+        { id: 'vue', name: 'Vue.js', desc: 'Progressive JavaScript framework' },
+        { id: 'express', name: 'Express', desc: 'Node.js web framework' },
+        { id: 'fastapi', name: 'FastAPI', desc: 'Modern Python web framework' },
+    ];
 
-  const languages = [
-    { id: 'typescript', name: 'TypeScript' },
-    { id: 'javascript', name: 'JavaScript' },
-    { id: 'python', name: 'Python' },
-  ];
+    const languages = [
+        { id: 'typescript', name: 'TypeScript' },
+        { id: 'javascript', name: 'JavaScript' },
+        { id: 'python', name: 'Python' },
+    ];
 
-  const availableFeatures = [
-    { id: 'tailwind', name: 'Tailwind CSS', desc: 'Utility-first CSS framework' },
-    { id: 'api', name: 'API Routes', desc: 'Backend API endpoints' },
-    { id: 'auth', name: 'Authentication', desc: 'JWT-based auth system' },
-    { id: 'database', name: 'Database', desc: 'MongoDB integration' },
-    { id: 'testing', name: 'Testing', desc: 'Jest/Vitest setup' },
-    { id: 'docker', name: 'Docker', desc: 'Containerization setup' },
-    { id: 'eslint', name: 'ESLint', desc: 'Code linting' },
-    { id: 'prettier', name: 'Prettier', desc: 'Code formatting' },
-  ];
+    const availableFeatures = [
+        { id: 'tailwind', name: 'Tailwind CSS', desc: 'Utility-first CSS framework' },
+        { id: 'api', name: 'API Routes', desc: 'Backend API endpoints' },
+        { id: 'auth', name: 'Authentication', desc: 'JWT-based auth system' },
+        { id: 'database', name: 'Database', desc: 'MongoDB integration' },
+        { id: 'testing', name: 'Testing', desc: 'Jest/Vitest setup' },
+        { id: 'docker', name: 'Docker', desc: 'Containerization setup' },
+        { id: 'eslint', name: 'ESLint', desc: 'Code linting' },
+        { id: 'prettier', name: 'Prettier', desc: 'Code formatting' },
+    ];
 
-  const toggleFeature = (featureId: string) => {
-    setFeatures(prev =>
-      prev.includes(featureId)
-        ? prev.filter(f => f !== featureId)
-        : [...prev, featureId]
-    );
-  };
+    const toggleFeature = (featureId: string) => {
+        setFeatures(prev =>
+            prev.includes(featureId)
+                ? prev.filter(f => f !== featureId)
+                : [...prev, featureId]
+        );
+    };
 
-  const parseDescriptionWithAI = async () => {
-    if (!description.trim()) {
-      alert('Please enter a project description');
-      return;
-    }
+    const parseDescriptionWithAI = async () => {
+        if (!description.trim()) {
+            alert('Please enter a project description');
+            return;
+        }
 
-    setGenerating(true);
-    setProgress('🧠 Analyzing your description with AI...');
+        setGenerating(true);
+        setProgress('🧠 Analyzing your description with AI...');
 
-    try {
-      const res = await axios.post('/api/parse-project-description', {
-        description,
-      });
+        try {
+            const res = await axios.post('/api/parse-project-description', {
+                description,
+            });
 
-      const { framework: fw, language: lang, features: feat } = res.data;
-      
-      if (fw) setFramework(fw);
-      if (lang) setLanguage(lang);
-      if (feat && feat.length > 0) setFeatures(feat);
+            const { framework: fw, language: lang, features: feat } = res.data;
 
-      setProgress('✅ AI parsed your requirements!');
-      setTimeout(() => setProgress(''), 2000);
-    } catch (error) {
-      setProgress('❌ Failed to parse description');
-      setTimeout(() => setProgress(''), 2000);
-    } finally {
-      setGenerating(false);
-    }
-  };
+            if (fw) setFramework(fw);
+            if (lang) setLanguage(lang);
+            if (feat && feat.length > 0) setFeatures(feat);
 
-  const generateBoilerplate = async () => {
-    setGenerating(true);
-    setSuccess(false);
-    setProgress('🧱 Setting up base structure...');
+            setProgress('✅ AI parsed your requirements!');
+            setTimeout(() => setProgress(''), 2000);
+        } catch (error) {
+            setProgress('❌ Failed to parse description');
+            setTimeout(() => setProgress(''), 2000);
+        } finally {
+            setGenerating(false);
+        }
+    };
 
-    try {
-      const config = {
-        framework,
-        language,
-        features,
-      };
+    const generateBoilerplate = async () => {
+        setGenerating(true);
+        setSuccess(false);
+        setProgress('🧱 Setting up base structure...');
 
-      // Simulate progress steps
-      setTimeout(() => setProgress('🧩 Adding features...'), 1000);
-      setTimeout(() => setProgress('🧰 Installing dependencies...'), 2000);
-      setTimeout(() => setProgress('📦 Packaging project...'), 3000);
+        try {
+            const config = {
+                framework,
+                language,
+                features,
+            };
 
-      // Generate ZIP for download
-      const zipRes = await axios.post('/api/generate-boilerplate', config, {
-        responseType: 'blob',
-      });
+            // Simulate progress steps
+            setTimeout(() => setProgress('🧩 Adding features...'), 1000);
+            setTimeout(() => setProgress('🧰 Installing dependencies...'), 2000);
+            setTimeout(() => setProgress('📦 Packaging project...'), 3000);
 
-      // Also get files as JSON for deployment
-      const filesRes = await axios.post('/api/generate-files', config);
-      setGeneratedFiles(filesRes.data.files);
+            // Generate ZIP for download
+            const zipRes = await axios.post('/api/generate-boilerplate', config, {
+                responseType: 'blob',
+            });
 
-      // Create download link
-      const fileName = `repoza-${framework}-${language}.zip`;
-      const url = window.URL.createObjectURL(new Blob([zipRes.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', fileName);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+            // Also get files as JSON for deployment
+            const filesRes = await axios.post('/api/generate-files', config);
+            setGeneratedFiles(filesRes.data.files);
 
-      // Save to history
-      saveBoilerplateHistory({
-        framework,
-        language,
-        features,
-        fileName,
-      });
+            // Create download link
+            const fileName = `repoza-${framework}-${language}.zip`;
+            const url = window.URL.createObjectURL(new Blob([zipRes.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', fileName);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
 
-      setProgress('✅ Your project is ready! Download started.');
-      setSuccess(true);
-    } catch (error) {
-      console.error('Generation failed:', error);
-      setProgress('❌ Failed to generate boilerplate');
-    } finally {
-      setTimeout(() => {
-        setGenerating(false);
-        setProgress('');
-      }, 2000);
-    }
-  };
+            // Save to history
+            saveBoilerplateHistory({
+                framework,
+                language,
+                features,
+                fileName,
+            });
+
+            setProgress('✅ Your project is ready! Download started.');
+            setSuccess(true);
+        } catch (error) {
+            console.error('Generation failed:', error);
+            setProgress('❌ Failed to generate boilerplate');
+        } finally {
+            setTimeout(() => {
+                setGenerating(false);
+                setProgress('');
+            }, 2000);
+        }
+    };
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 text-white">
@@ -205,9 +205,9 @@ export default function Generator() {
                                     key={fw.id}
                                     onClick={() => setFramework(fw.id)}
                                     className={`p-5 rounded-xl border-2 transition-all duration-300 text-left hover-lift ${framework === fw.id
-                                            ? 'border-purple-500 glass-strong shadow-lg shadow-purple-500/20'
-                                            : 'glass-light border-white/10 hover:border-purple-500/50'
-                                    }`}
+                                        ? 'border-purple-500 glass-strong shadow-lg shadow-purple-500/20'
+                                        : 'glass-light border-white/10 hover:border-purple-500/50'
+                                        }`}
                                 >
                                     <div className="font-semibold text-lg mb-1">{fw.name}</div>
                                     <div className="text-sm text-gray-400">{fw.desc}</div>
@@ -227,8 +227,8 @@ export default function Generator() {
                                     key={lang.id}
                                     onClick={() => setLanguage(lang.id)}
                                     className={`p-5 rounded-xl border-2 transition-all duration-300 hover-lift ${language === lang.id
-                                            ? 'border-cyan-500 glass-strong shadow-lg shadow-cyan-500/20'
-                                            : 'glass-light border-white/10 hover:border-cyan-500/50'
+                                        ? 'border-cyan-500 glass-strong shadow-lg shadow-cyan-500/20'
+                                        : 'glass-light border-white/10 hover:border-cyan-500/50'
                                         }`}
                                 >
                                     <div className="font-semibold text-lg text-center">{lang.name}</div>
@@ -248,13 +248,13 @@ export default function Generator() {
                                     key={feature.id}
                                     onClick={() => toggleFeature(feature.id)}
                                     className={`p-5 rounded-xl border-2 transition-all duration-300 text-left flex items-start gap-3 hover-lift ${features.includes(feature.id)
-                                            ? 'border-green-500 glass-strong shadow-lg shadow-green-500/20'
-                                            : 'glass-light border-white/10 hover:border-green-500/50'
+                                        ? 'border-green-500 glass-strong shadow-lg shadow-green-500/20'
+                                        : 'glass-light border-white/10 hover:border-green-500/50'
                                         }`}
                                 >
                                     <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 mt-0.5 transition-all ${features.includes(feature.id)
-                                            ? 'border-green-500 bg-green-500'
-                                            : 'border-white/30'
+                                        ? 'border-green-500 bg-green-500'
+                                        : 'border-white/30'
                                         }`}>
                                         {features.includes(feature.id) && (
                                             <CheckCircle className="w-5 h-5 text-white" />
@@ -286,7 +286,12 @@ export default function Generator() {
                     <button
                         onClick={generateBoilerplate}
                         disabled={generating}
-                        className="w-full btn-ai text-lg py-5 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl"
+                        className="w-full px-8 py-5 rounded-xl font-bold text-lg flex items-center justify-center gap-3 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover-lift"
+                        style={{
+                            background: generating 
+                                ? 'linear-gradient(135deg, #6B7280 0%, #4B5563 100%)'
+                                : 'linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%)'
+                        }}
                     >
                         {generating ? (
                             <>
@@ -320,16 +325,16 @@ export default function Generator() {
                     </div>
                 )}
 
-        {/* Selected Configuration Summary */}
-        <div className="mt-6 p-4 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
-          <h3 className="text-sm font-semibold text-gray-400 mb-2">Your Configuration:</h3>
-          <div className="text-sm text-gray-300 space-y-1">
-            <p><strong>Framework:</strong> {frameworks.find(f => f.id === framework)?.name}</p>
-            <p><strong>Language:</strong> {languages.find(l => l.id === language)?.name}</p>
-            <p><strong>Features:</strong> {features.length > 0 ? features.map(f => availableFeatures.find(af => af.id === f)?.name).join(', ') : 'None'}</p>
-          </div>
+                {/* Selected Configuration Summary */}
+                <div className="mt-6 p-4 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
+                    <h3 className="text-sm font-semibold text-gray-400 mb-2">Your Configuration:</h3>
+                    <div className="text-sm text-gray-300 space-y-1">
+                        <p><strong>Framework:</strong> {frameworks.find(f => f.id === framework)?.name}</p>
+                        <p><strong>Language:</strong> {languages.find(l => l.id === language)?.name}</p>
+                        <p><strong>Features:</strong> {features.length > 0 ? features.map(f => availableFeatures.find(af => af.id === f)?.name).join(', ') : 'None'}</p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }
