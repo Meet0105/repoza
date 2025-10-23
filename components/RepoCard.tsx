@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Star, GitFork, ExternalLink, Copy, Sparkles } from 'lucide-react';
+import { Star, GitFork, ExternalLink, Copy, Sparkles, Heart } from 'lucide-react';
 import axios from 'axios';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import AddToCollectionModal from './AddToCollectionModal';
 
 type Props = { 
   repo: any;
@@ -9,9 +11,11 @@ type Props = {
 };
 
 export default function RepoCard({ repo, parsedQuery }: Props) {
+  const { data: session } = useSession();
   const [generating, setGenerating] = useState(false);
   const [showBoilerplate, setShowBoilerplate] = useState(false);
   const [boilerplate, setBoilerplate] = useState('');
+  const [showCollectionModal, setShowCollectionModal] = useState(false);
 
   const copyCloneCommand = () => {
     navigator.clipboard.writeText(`git clone ${repo.html_url}.git`);
@@ -100,6 +104,15 @@ export default function RepoCard({ repo, parsedQuery }: Props) {
                 </div>
 
                 <div className="flex gap-2">
+                    {session && (
+                        <button
+                            onClick={() => setShowCollectionModal(true)}
+                            className="p-2 glass-light hover:glass rounded-lg transition-all duration-300 text-gray-400 hover:text-pink-400 hover-lift"
+                            title="Add to collection"
+                        >
+                            <Heart className="w-4 h-4" />
+                        </button>
+                    )}
                     <button
                         onClick={copyCloneCommand}
                         className="p-2 glass-light hover:glass rounded-lg transition-all duration-300 text-gray-400 hover:text-cyan-400 hover-lift"
@@ -136,6 +149,14 @@ export default function RepoCard({ repo, parsedQuery }: Props) {
                         {boilerplate}
                     </pre>
                 </div>
+            )}
+
+            {/* Add to Collection Modal */}
+            {showCollectionModal && (
+                <AddToCollectionModal
+                    repo={repo}
+                    onClose={() => setShowCollectionModal(false)}
+                />
             )}
         </div>
     );

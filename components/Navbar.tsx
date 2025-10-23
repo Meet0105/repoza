@@ -68,13 +68,22 @@ export default function Navbar() {
               Generator
             </button>
             {session && (
-              <button
-                onClick={() => router.push('/history')}
-                className={`text-sm font-medium transition-all duration-300 hover:text-cyan-400 ${router.pathname === '/history' ? 'text-cyan-400' : 'text-gray-300'
-                  }`}
-              >
-                History
-              </button>
+              <>
+                <button
+                  onClick={() => router.push('/collections')}
+                  className={`text-sm font-medium transition-all duration-300 hover:text-pink-400 ${router.pathname === '/collections' ? 'text-pink-400' : 'text-gray-300'
+                    }`}
+                >
+                  Collections
+                </button>
+                <button
+                  onClick={() => router.push('/history')}
+                  className={`text-sm font-medium transition-all duration-300 hover:text-cyan-400 ${router.pathname === '/history' ? 'text-cyan-400' : 'text-gray-300'
+                    }`}
+                >
+                  History
+                </button>
+              </>
             )}
           </div>
 
@@ -124,6 +133,17 @@ export default function Navbar() {
 
                     {/* Menu Items */}
                     <div className="py-2">
+                      <button
+                        onClick={() => {
+                          router.push('/collections');
+                          setShowDropdown(false);
+                        }}
+                        className="w-full px-4 py-2.5 text-left text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-3 transition-all duration-300"
+                      >
+                        <History className="w-4 h-4 text-pink-400" />
+                        <span className="text-sm font-medium">Collections</span>
+                      </button>
+
                       <button
                         onClick={() => {
                           router.push('/history');

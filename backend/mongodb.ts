@@ -182,3 +182,175 @@ export async function getUserSearchHistory(email: string, limit = 20) {
     return [];
   }
 }
+
+// Collections/Favorites Functions
+export async function createCollection(email: string, name: string, description?: string) {
+  try {
+    const client = await connectToDatabase();
+    if (!client) return null;
+
+    const db = client.db();
+    const collection = {
+      email,
+      name,
+      description: description || '',
+      repos: [],
+      isPublic: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const result = await db.collection('collections').insertOne(collection);
+    return { ...collection, _id: result.insertedId };
+  } catch (error) {
+    console.error('Failed to create collection:', error);
+    return null;
+  }
+}
+
+export async function getUserCollections(email: string) {
+  try {
+    const client = await connectToDatabase();
+    if (!client) return [];
+
+    const db = client.db();
+    const collections = await db
+      .collection('collections')
+      .find({ email })
+      .sort({ updatedAt: -1 })
+      .toArray();
+    
+    return collections;
+  } catch (error) {
+    console.error('Failed to get user collections:', error);
+    return [];
+  }
+}
+
+export async function getCollectionById(collectionId: string, email: string) {
+  try {
+    const client = await connectToDatabase();
+    if (!client) return null;
+
+    const { ObjectId } = require('mongodb');
+    const db = client.db();
+    const collection = await db.collection('collections').findOne({
+      _id: new ObjectId(collectionId),
+      email,
+    });
+    
+    return collection;
+  } catch (error) {
+    console.error('Failed to get collection:', error);
+    return null;
+  }
+}
+
+export async function addRepoToCollection(collectionId: string, email: string, repo: any) {
+  try {
+    const client = await connectToDatabase();
+    if (!client) return false;
+
+    const { ObjectId } = require('mongodb');
+    const db = client.db();
+    
+    const result = await db.collection('collections').updateOne(
+      { _id: new ObjectId(collectionId), email },
+      { 
+        $addToSet: { repos: repo },
+        $set: { updatedAt: new Date() }
+      }
+    );
+    
+    return result.modifiedCount > 0;
+  } catch (error) {
+    console.error('Failed to add repo to collection:', error);
+    return false;
+  }
+}
+
+export async function removeRepoFromCollection(collectionId: string, email: string, repoFullName: string) {
+  try {
+    const client = await connectToDatabase();
+    if (!client) return false;
+
+    const { ObjectId } = require('mongodb');
+    const db = client.db();
+    
+    const result = await db.collection('collections').updateOne(
+      { _id: new ObjectId(collectionId), email },
+      { 
+        $pull: { repos: { full_name: repoFullName } } as any,
+        $set: { updatedAt: new Date() }
+      }
+    );
+    
+    return result.modifiedCount > 0;
+  } catch (error) {
+    console.error('Failed to remove repo from collection:', error);
+    return false;
+  }
+}
+
+export async function updateCollection(collectionId: string, email: string, updates: any) {
+  try {
+    const client = await connectToDatabase();
+    if (!client) return false;
+
+    const { ObjectId } = require('mongodb');
+    const db = client.db();
+    
+    const result = await db.collection('collections').updateOne(
+      { _id: new ObjectId(collectionId), email },
+      { 
+        $set: { ...updates, updatedAt: new Date() }
+      }
+    );
+    
+    return result.modifiedCount > 0;
+  } catch (error) {
+    console.error('Failed to update collection:', error);
+    return false;
+  }
+}
+
+export async function deleteCollection(collectionId: string, email: string) {
+  try {
+    const client = await connectToDatabase();
+    if (!client) return false;
+
+    const { ObjectId } = require('mongodb');
+    const db = client.db();
+    
+    const result = await db.collection('collections').deleteOne({
+      _id: new ObjectId(collectionId),
+      email,
+    });
+    
+    return result.deletedCount > 0;
+  } catch (error) {
+    console.error('Failed to delete collection:', error);
+    return false;
+  }
+}
+
+export async function isRepoInCollection(collectionId: string, email: string, repoFullName: string) {
+  try {
+    const client = await connectToDatabase();
+    if (!client) return false;
+
+    const { ObjectId } = require('mongodb');
+    const db = client.db();
+    
+    const collection = await db.collection('collections').findOne({
+      _id: new ObjectId(collectionId),
+      email,
+      'repos.full_name': repoFullName,
+    });
+    
+    return !!collection;
+  } catch (error) {
+    console.error('Failed to check repo in collection:', error);
+    return false;
+  }
+}
