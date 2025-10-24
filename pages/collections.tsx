@@ -137,23 +137,51 @@ function CollectionsContent() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <Navbar />
 
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold gradient-text-primary mb-2">My Collections</h1>
-          <p className="text-gray-400">Organize and manage your favorite repositories</p>
-        </div>
+      <div className="container mx-auto px-4 py-8 mt-20">
+        {/* Header with Stats */}
+        <div className="mb-8 animate-slide-up">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+            <div>
+              <h1 className="text-4xl md:text-5xl font-bold gradient-text-primary mb-2">
+                My Collections
+              </h1>
+              <p className="text-gray-400 text-lg">
+                Organize and manage your favorite repositories
+              </p>
+            </div>
+            
+            {/* Stats */}
+            {collections.length > 0 && (
+              <div className="flex gap-4">
+                <div className="glass-light px-6 py-3 rounded-xl text-center">
+                  <div className="text-2xl font-bold gradient-text-primary">
+                    {collections.length}
+                  </div>
+                  <div className="text-xs text-gray-400 mt-1">Collections</div>
+                </div>
+                <div className="glass-light px-6 py-3 rounded-xl text-center">
+                  <div className="text-2xl font-bold text-pink-400">
+                    {collections.reduce((sum, c) => sum + c.repos.length, 0)}
+                  </div>
+                  <div className="text-xs text-gray-400 mt-1">Total Repos</div>
+                </div>
+              </div>
+            )}
+          </div>
 
-        {/* Actions */}
-        <div className="flex gap-3 mb-8">
-          <button onClick={() => setShowCreateModal(true)} className="btn-primary">
-            <FolderPlus className="w-5 h-5" />
-            <span>New Collection</span>
-          </button>
-          <button onClick={exportCollections} className="btn-secondary">
-            <Download className="w-5 h-5" />
-            <span>Export All</span>
-          </button>
+          {/* Actions */}
+          <div className="flex flex-wrap gap-3">
+            <button onClick={() => setShowCreateModal(true)} className="btn-primary">
+              <FolderPlus className="w-5 h-5" />
+              <span>New Collection</span>
+            </button>
+            {collections.length > 0 && (
+              <button onClick={exportCollections} className="btn-secondary">
+                <Download className="w-5 h-5" />
+                <span>Export All</span>
+              </button>
+            )}
+          </div>
         </div>
 
         {loading ? (
