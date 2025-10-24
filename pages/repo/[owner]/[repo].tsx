@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Star, GitFork, Eye, AlertCircle, Code2, Calendar, Sparkles, ExternalLink, Copy, ArrowLeft, Folder, File, ChevronRight, ChevronDown, FolderOpen, Zap } from 'lucide-react';
+import { Star, GitFork, Eye, AlertCircle, Code2, Calendar, Sparkles, ExternalLink, Copy, ArrowLeft, Folder, File, ChevronRight, ChevronDown, FolderOpen, Zap, Heart } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import Link from 'next/link';
 import { saveRepoHistory } from '../../../utils/history';
@@ -11,6 +11,8 @@ import CodeViewer from '../../../components/CodeViewer';
 import CodeConverterModal from '../../../components/CodeConverterModal';
 import LivePreviewButton from '../../../components/LivePreviewButton';
 import LivePreviewModal from '../../../components/LivePreviewModal';
+import AddToCollectionModal from '../../../components/AddToCollectionModal';
+import { useSession } from 'next-auth/react';
 
 // File tree node component
 function FileTreeNode({ node, level = 0, onFileClick }: { node: any; level?: number; onFileClick?: (path: string) => void }) {
@@ -86,6 +88,7 @@ function FileTreeNode({ node, level = 0, onFileClick }: { node: any; level?: num
 export default function RepoDetails() {
     const router = useRouter();
     const { owner, repo } = router.query;
+    const { data: session } = useSession();
 
     const [data, setData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
@@ -98,6 +101,7 @@ export default function RepoDetails() {
     const [showFileTree, setShowFileTree] = useState(false);
     const [isIndexed, setIsIndexed] = useState(false);
     const [indexing, setIndexing] = useState(false);
+    const [showCollectionModal, setShowCollectionModal] = useState(false);
     const [selectedFile, setSelectedFile] = useState<string | null>(null);
     const [showConverter, setShowConverter] = useState(false);
     const [showLivePreview, setShowLivePreview] = useState(false);
@@ -291,6 +295,15 @@ export default function RepoDetails() {
 
                         {/* Action Buttons */}
                         <div className="flex gap-3 flex-wrap mt-6 pt-6 border-t border-white/10">
+                            {session && (
+                                <button
+                                    onClick={() => setShowCollectionModal(true)}
+                                    className="btn-outline flex items-center gap-2 hover:text-cyan-400 hover:border-cyan-400"
+                                >
+                                    <Heart className="w-5 h-5" />
+                                    <span>Add to Collection</span>
+                                </button>
+                            )}
                             <a
                                 href={repository.html_url}
                                 target="_blank"
@@ -546,6 +559,14 @@ export default function RepoDetails() {
                         owner={owner as string}
                         repo={repo as string}
                         onClose={() => setShowLivePreview(false)}
+                    />
+                )}
+
+                {/* Add to Collection Modal */}
+                {showCollectionModal && (
+                    <AddToCollectionModal
+                        repo={repository}
+                        onClose={() => setShowCollectionModal(false)}
                     />
                 )}
             </div>

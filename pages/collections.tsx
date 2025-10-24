@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
 import ProtectedRoute from '../components/ProtectedRoute';
-import { FolderPlus, Folder, Trash2, Edit2, Download, Share2, X, Check } from 'lucide-react';
+import { FolderPlus, Folder, Trash2, Edit2, Download, X, Check, ArrowLeft } from 'lucide-react';
 import axios from 'axios';
 import Link from 'next/link';
 import RepoCard from '../components/RepoCard';
@@ -17,7 +17,6 @@ export default function Collections() {
 }
 
 function CollectionsContent() {
-  const { data: session } = useSession();
   const router = useRouter();
   const [collections, setCollections] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -134,54 +133,42 @@ function CollectionsContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 text-white pt-20">
       <Navbar />
 
-      <div className="container mx-auto px-4 py-8 mt-20">
-        {/* Header with Stats */}
-        <div className="mb-8 animate-slide-up">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-            <div>
-              <h1 className="text-4xl md:text-5xl font-bold gradient-text-primary mb-2">
-                My Collections
-              </h1>
-              <p className="text-gray-400 text-lg">
-                Organize and manage your favorite repositories
-              </p>
-            </div>
-            
-            {/* Stats */}
-            {collections.length > 0 && (
-              <div className="flex gap-4">
-                <div className="glass-light px-6 py-3 rounded-xl text-center">
-                  <div className="text-2xl font-bold gradient-text-primary">
-                    {collections.length}
-                  </div>
-                  <div className="text-xs text-gray-400 mt-1">Collections</div>
-                </div>
-                <div className="glass-light px-6 py-3 rounded-xl text-center">
-                  <div className="text-2xl font-bold text-pink-400">
-                    {collections.reduce((sum, c) => sum + c.repos.length, 0)}
-                  </div>
-                  <div className="text-xs text-gray-400 mt-1">Total Repos</div>
-                </div>
-              </div>
-            )}
-          </div>
+      <div className="max-w-6xl mx-auto px-4 py-12">
+        {/* Header */}
+        <div className="mb-12 animate-slide-up">
+          <Link href="/" className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 mb-6 transition-colors">
+            <ArrowLeft className="w-4 h-4" />
+            <span className="font-medium">Back to home</span>
+          </Link>
 
-          {/* Actions */}
-          <div className="flex flex-wrap gap-3">
-            <button onClick={() => setShowCreateModal(true)} className="btn-primary">
-              <FolderPlus className="w-5 h-5" />
-              <span>New Collection</span>
-            </button>
-            {collections.length > 0 && (
-              <button onClick={exportCollections} className="btn-secondary">
-                <Download className="w-5 h-5" />
-                <span>Export All</span>
-              </button>
-            )}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center shadow-lg">
+                <Folder className="w-9 h-9 text-white" />
+              </div>
+              <div>
+                <h1 className="text-5xl font-bold gradient-text-primary">Collections</h1>
+                <p className="text-gray-300 text-lg mt-2">Organize and manage your favorite repositories</p>
+              </div>
+            </div>
           </div>
+        </div>
+
+        {/* Actions */}
+        <div className="flex gap-3 mb-8">
+          <button onClick={() => setShowCreateModal(true)} className="btn-primary">
+            <FolderPlus className="w-5 h-5" />
+            <span>New Collection</span>
+          </button>
+          {collections.length > 0 && (
+            <button onClick={exportCollections} className="btn-secondary">
+              <Download className="w-5 h-5" />
+              <span>Export All</span>
+            </button>
+          )}
         </div>
 
         {loading ? (
@@ -200,7 +187,7 @@ function CollectionsContent() {
 
                 {collections.length === 0 ? (
                   <div className="text-center py-12">
-                    <Folder className="w-16 h-16 mx-auto mb-4 text-gray-600" />
+                    <Folder className="w-16 h-16 mx-auto mb-4 opacity-50 text-gray-600" />
                     <p className="text-gray-400 mb-4">No collections yet</p>
                     <button
                       onClick={() => setShowCreateModal(true)}
@@ -215,10 +202,10 @@ function CollectionsContent() {
                     {collections.map((collection) => (
                       <div
                         key={collection._id}
-                        className={`p-4 rounded-lg cursor-pointer transition-all ${
+                        className={`p-4 rounded-lg cursor-pointer transition-all border ${
                           selectedCollection?._id === collection._id
-                            ? 'glass border border-cyan-500/50'
-                            : 'glass-light hover:glass'
+                            ? 'glass-strong border-purple-500/50 shadow-lg'
+                            : 'glass-light border-white/10 hover:border-purple-500/50 hover:glass'
                         }`}
                         onClick={() => setSelectedCollection(collection)}
                       >
@@ -239,7 +226,7 @@ function CollectionsContent() {
                               className="p-1.5 hover:bg-white/10 rounded transition-colors"
                               title="Edit"
                             >
-                              <Edit2 className="w-4 h-4 text-gray-400" />
+                              <Edit2 className="w-4 h-4 text-gray-400 hover:text-purple-400" />
                             </button>
                             <button
                               onClick={(e) => {
@@ -249,7 +236,7 @@ function CollectionsContent() {
                               className="p-1.5 hover:bg-white/10 rounded transition-colors"
                               title="Delete"
                             >
-                              <Trash2 className="w-4 h-4 text-red-400" />
+                              <Trash2 className="w-4 h-4 text-gray-400 hover:text-red-400" />
                             </button>
                           </div>
                         </div>
@@ -263,13 +250,13 @@ function CollectionsContent() {
             {/* Collection Details */}
             <div className="lg:col-span-2">
               {selectedCollection ? (
-                <div className="glass-strong rounded-2xl p-6">
+                <div className="glass-strong rounded-2xl p-6 border border-white/10">
                   <div className="mb-6">
                     <h2 className="text-2xl font-bold gradient-text-primary">
                       {selectedCollection.name}
                     </h2>
                     {selectedCollection.description && (
-                      <p className="text-gray-400 mt-2">{selectedCollection.description}</p>
+                      <p className="text-gray-300 mt-2">{selectedCollection.description}</p>
                     )}
                     <p className="text-sm text-gray-500 mt-2">
                       Created {new Date(selectedCollection.createdAt).toLocaleDateString()}
@@ -278,6 +265,7 @@ function CollectionsContent() {
 
                   {selectedCollection.repos.length === 0 ? (
                     <div className="text-center py-12">
+                      <Folder className="w-16 h-16 mx-auto mb-4 opacity-50 text-gray-600" />
                       <p className="text-gray-400">No repositories in this collection yet</p>
                       <p className="text-sm text-gray-500 mt-2">
                         Add repos by clicking the heart icon on any repository card
@@ -292,8 +280,8 @@ function CollectionsContent() {
                   )}
                 </div>
               ) : (
-                <div className="glass-strong rounded-2xl p-6 text-center py-20">
-                  <Folder className="w-20 h-20 mx-auto mb-4 text-gray-600" />
+                <div className="glass-strong rounded-2xl p-6 text-center py-20 border border-white/10">
+                  <Folder className="w-20 h-20 mx-auto mb-4 opacity-50 text-gray-600" />
                   <p className="text-gray-400 text-lg">Select a collection to view its contents</p>
                 </div>
               )}
