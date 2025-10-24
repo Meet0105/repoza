@@ -288,7 +288,7 @@ export default function Generator() {
                         disabled={generating}
                         className="w-full px-8 py-5 rounded-xl font-bold text-lg flex items-center justify-center gap-3 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover-lift"
                         style={{
-                            background: generating 
+                            background: generating
                                 ? 'linear-gradient(135deg, #6B7280 0%, #4B5563 100%)'
                                 : 'linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%)'
                         }}

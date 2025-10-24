@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Copy, Check, Download, ExternalLink } from 'lucide-react';
+import { X, Copy, Check, Download, ExternalLink, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
 import axios from 'axios';
 
 interface CodeViewerProps {
@@ -14,6 +14,9 @@ export default function CodeViewer({ owner, repo, filePath, onClose }: CodeViewe
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [copied, setCopied] = useState(false);
+    const [explaining, setExplaining] = useState(false);
+    const [explanation, setExplanation] = useState<any>(null);
+    const [showExplanation, setShowExplanation] = useState(false);
 
     useEffect(() => {
         const fetchFileContent = async () => {
@@ -87,6 +90,35 @@ export default function CodeViewer({ owner, repo, filePath, onClose }: CodeViewe
         return languages[ext || ''] || 'text';
     };
 
+    const handleExplainCode = async () => {
+        if (!content) return;
+
+        setExplaining(true);
+        setShowExplanation(true);
+        try {
+            const res = await axios.post('/api/explain-code', {
+                owner,
+                repo,
+                filePath,
+                code: content,
+                fileName: filePath.split('/').pop(),
+                language: getLanguage(filePath),
+            });
+
+            setExplanation(res.data.explanation);
+        } catch (err: any) {
+            setExplanation({
+                overview: 'Failed to generate explanation. Please try again.',
+                keyFeatures: [],
+                complexity: 'Unknown',
+                howToUse: '',
+                dependencies: [],
+            });
+        } finally {
+            setExplaining(false);
+        }
+    };
+
     return (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-gray-900 rounded-lg border border-white/20 w-full max-w-5xl max-h-[90vh] flex flex-col">
@@ -99,6 +131,16 @@ export default function CodeViewer({ owner, repo, filePath, onClose }: CodeViewe
                         </p>
                     </div>
                     <div className="flex items-center gap-2">
+                        <button
+                            onClick={handleExplainCode}
+                            disabled={explaining || !content}
+                            className="px-3 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 disabled:from-gray-600 disabled:to-gray-600 text-white rounded transition-all flex items-center gap-2 text-sm font-medium"
+                            title="Explain this code with AI"
+                        >
+                            <Sparkles className="w-4 h-4" />
+                            <span>{explaining ? 'Explaining...' : 'Explain Code'}</span>
+                        </button>
+                        <div className="w-px h-6 bg-white/10"></div>
                         <button
                             onClick={handleCopy}
                             className="p-2 hover:bg-white/10 rounded transition-colors text-gray-400 hover:text-white"
@@ -131,6 +173,91 @@ export default function CodeViewer({ owner, repo, filePath, onClose }: CodeViewe
                         </button>
                     </div>
                 </div>
+
+                {/* AI Explanation Section */}
+                {showExplanation && (
+                    <div className="border-b border-white/10 bg-gradient-to-r from-purple-900/20 to-pink-900/20">
+                        <button
+                            onClick={() => setShowExplanation(!showExplanation)}
+                            className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
+                        >
+                            <div className="flex items-center gap-2">
+                                <Sparkles className="w-5 h-5 text-purple-400" />
+                                <span className="font-semibold text-white">AI Code Explanation</span>
+                            </div>
+                            {showExplanation ? (
+                                <ChevronUp className="w-5 h-5 text-gray-400" />
+                            ) : (
+                                <ChevronDown className="w-5 h-5 text-gray-400" />
+                            )}
+                        </button>
+
+                        {showExplanation && (
+                            <div className="p-4 space-y-4 max-h-96 overflow-y-auto">
+                                {explaining ? (
+                                    <div className="text-center py-8">
+                                        <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500 mb-3"></div>
+                                        <p className="text-gray-400">Analyzing code with AI...</p>
+                                    </div>
+                                ) : explanation ? (
+                                    <>
+                                        {/* Overview */}
+                                        <div>
+                                            <h4 className="text-sm font-semibold text-purple-400 mb-2">📝 Overview</h4>
+                                            <p className="text-gray-300 text-sm leading-relaxed">{explanation.overview}</p>
+                                        </div>
+
+                                        {/* Key Features */}
+                                        {explanation.keyFeatures && explanation.keyFeatures.length > 0 && (
+                                            <div>
+                                                <h4 className="text-sm font-semibold text-purple-400 mb-2">✨ Key Features</h4>
+                                                <ul className="space-y-1">
+                                                    {explanation.keyFeatures.map((feature: string, idx: number) => (
+                                                        <li key={idx} className="text-gray-300 text-sm flex items-start gap-2">
+                                                            <span className="text-purple-400 mt-1">•</span>
+                                                            <span>{feature}</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+
+                                        {/* Complexity */}
+                                        <div>
+                                            <h4 className="text-sm font-semibold text-purple-400 mb-2">📊 Complexity</h4>
+                                            <p className="text-gray-300 text-sm">{explanation.complexity}</p>
+                                        </div>
+
+                                        {/* How to Use */}
+                                        {explanation.howToUse && (
+                                            <div>
+                                                <h4 className="text-sm font-semibold text-purple-400 mb-2">🚀 How to Use</h4>
+                                                <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">{explanation.howToUse}</p>
+                                            </div>
+                                        )}
+
+                                        {/* Dependencies */}
+                                        {explanation.dependencies && explanation.dependencies.length > 0 && (
+                                            <div>
+                                                <h4 className="text-sm font-semibold text-purple-400 mb-2">📦 Dependencies</h4>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {explanation.dependencies.map((dep: string, idx: number) => (
+                                                        <span
+                                                            key={idx}
+                                                            className="px-2 py-1 bg-purple-600/20 text-purple-300 rounded text-xs border border-purple-500/30"
+                                                        >
+                                                            {dep}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </>
+                                ) : null}
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 {/* Content */}
                 <div className="flex-1 overflow-auto p-4">

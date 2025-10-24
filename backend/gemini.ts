@@ -260,3 +260,66 @@ export function chunkText(text: string, maxChunkSize = 500): string[] {
     
     return chunks;
 }
+
+// AI Code Explanation
+export async function explainCode(
+    code: string,
+    fileName: string,
+    language?: string
+): Promise<{
+    overview: string;
+    keyFeatures: string[];
+    complexity: string;
+    howToUse: string;
+    dependencies: string[];
+}> {
+    try {
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
+
+        const prompt = `You are an expert code explainer. Analyze this code file and provide a clear, beginner-friendly explanation.
+
+File: ${fileName}
+Language: ${language || 'Unknown'}
+
+Code:
+\`\`\`
+${code.slice(0, 5000)} ${code.length > 5000 ? '\n... (truncated)' : ''}
+\`\`\`
+
+Provide a JSON response with:
+{
+  "overview": "2-3 sentence summary of what this code does",
+  "keyFeatures": ["feature 1", "feature 2", "feature 3"],
+  "complexity": "Beginner/Intermediate/Advanced - brief explanation",
+  "howToUse": "Step-by-step guide on how to use this code",
+  "dependencies": ["dependency 1", "dependency 2"]
+}
+
+Focus on:
+- What problem does this code solve?
+- What are the main functions/classes?
+- How would someone use this?
+- What external libraries does it use?
+
+Keep explanations simple and practical. Respond ONLY with valid JSON.`;
+
+        const result = await model.generateContent(prompt);
+        const response = result.response;
+        const text = response.text();
+
+        // Clean up the response
+        const cleanText = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+        const parsed = JSON.parse(cleanText);
+
+        return {
+            overview: parsed.overview || 'No overview available',
+            keyFeatures: parsed.keyFeatures || [],
+            complexity: parsed.complexity || 'Unknown',
+            howToUse: parsed.howToUse || 'No usage guide available',
+            dependencies: parsed.dependencies || [],
+        };
+    } catch (error) {
+        console.error('Code explanation error:', error);
+        throw new Error('Failed to explain code');
+    }
+}
