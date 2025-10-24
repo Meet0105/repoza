@@ -12,6 +12,7 @@ import CodeConverterModal from '../../../components/CodeConverterModal';
 import LivePreviewButton from '../../../components/LivePreviewButton';
 import LivePreviewModal from '../../../components/LivePreviewModal';
 import AddToCollectionModal from '../../../components/AddToCollectionModal';
+import DependencyAnalyzer from '../../../components/DependencyAnalyzer';
 import { useSession } from 'next-auth/react';
 
 // File tree node component
@@ -520,6 +521,11 @@ export default function RepoDetails() {
                             </p>
                         </div>
                     )}
+                </div>
+
+                {/* Dependency Analyzer */}
+                <div className="mb-8">
+                    <DependencyAnalyzer owner={owner as string} repo={repo as string} />
                 </div>
 
                 {/* Additional Info */}
