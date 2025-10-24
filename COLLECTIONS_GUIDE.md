@@ -210,7 +210,7 @@ Main page for managing collections.
 ### Navbar
 - Added "Collections" link in navigation
 - Added "Collections" in user dropdown menu
-- Pink color theme for collections
+- Cyan color theme matching Repoza design system
 
 ### MongoDB Backend
 - Added collection CRUD functions

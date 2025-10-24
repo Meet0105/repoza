@@ -71,7 +71,7 @@ export default function Navbar() {
               <>
                 <button
                   onClick={() => router.push('/collections')}
-                  className={`text-sm font-medium transition-all duration-300 hover:text-pink-400 ${router.pathname === '/collections' ? 'text-pink-400' : 'text-gray-300'
+                  className={`text-sm font-medium transition-all duration-300 hover:text-cyan-400 ${router.pathname === '/collections' ? 'text-cyan-400' : 'text-gray-300'
                     }`}
                 >
                   Collections
@@ -140,7 +140,7 @@ export default function Navbar() {
                         }}
                         className="w-full px-4 py-2.5 text-left text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-3 transition-all duration-300"
                       >
-                        <History className="w-4 h-4 text-pink-400" />
+                        <History className="w-4 h-4 text-cyan-400" />
                         <span className="text-sm font-medium">Collections</span>
                       </button>
 

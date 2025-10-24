@@ -42,7 +42,7 @@ A complete Collections/Favorites system that allows users to save, organize, and
 - Visual feedback (checkmarks for added repos)
 - Responsive design
 - Smooth animations
-- Pink/rose color theme for collections
+- Cyan/blue color theme matching Repoza design system
 
 ### 🔒 Security
 - All endpoints require authentication

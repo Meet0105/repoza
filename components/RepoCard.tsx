@@ -107,7 +107,7 @@ export default function RepoCard({ repo, parsedQuery }: Props) {
                     {session && (
                         <button
                             onClick={() => setShowCollectionModal(true)}
-                            className="p-2 glass-light hover:glass rounded-lg transition-all duration-300 text-gray-400 hover:text-pink-400 hover-lift"
+                            className="p-2 glass-light hover:glass rounded-lg transition-all duration-300 text-gray-400 hover:text-cyan-400 hover-lift"
                             title="Add to collection"
                         >
                             <Heart className="w-4 h-4" />
