@@ -70,6 +70,13 @@ export default function Navbar() {
             {session && (
               <>
                 <button
+                  onClick={() => router.push('/learn')}
+                  className={`text-sm font-medium transition-all duration-300 hover:text-orange-400 ${router.pathname === '/learn' ? 'text-orange-400' : 'text-gray-300'
+                    }`}
+                >
+                  Learn
+                </button>
+                <button
                   onClick={() => router.push('/collections')}
                   className={`text-sm font-medium transition-all duration-300 hover:text-cyan-400 ${router.pathname === '/collections' ? 'text-cyan-400' : 'text-gray-300'
                     }`}
@@ -133,6 +140,17 @@ export default function Navbar() {
 
                     {/* Menu Items */}
                     <div className="py-2">
+                      <button
+                        onClick={() => {
+                          router.push('/learn');
+                          setShowDropdown(false);
+                        }}
+                        className="w-full px-4 py-2.5 text-left text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-3 transition-all duration-300"
+                      >
+                        <History className="w-4 h-4 text-orange-400" />
+                        <span className="text-sm font-medium">Learning Paths</span>
+                      </button>
+
                       <button
                         onClick={() => {
                           router.push('/collections');
