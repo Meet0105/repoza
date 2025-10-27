@@ -13,6 +13,7 @@ import LivePreviewButton from '../../../components/LivePreviewButton';
 import LivePreviewModal from '../../../components/LivePreviewModal';
 import AddToCollectionModal from '../../../components/AddToCollectionModal';
 import DependencyAnalyzer from '../../../components/DependencyAnalyzer';
+import SetupGuide from '../../../components/SetupGuide';
 import { useSession } from 'next-auth/react';
 
 // File tree node component
@@ -526,6 +527,15 @@ export default function RepoDetails() {
                 {/* Dependency Analyzer */}
                 <div className="mb-8">
                     <DependencyAnalyzer owner={owner as string} repo={repo as string} />
+                </div>
+
+                {/* Setup Guide */}
+                <div className="mb-8">
+                    <SetupGuide 
+                        owner={owner as string} 
+                        repo={repo as string}
+                        readme={readme}
+                    />
                 </div>
 
                 {/* Additional Info */}
