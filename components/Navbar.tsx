@@ -109,11 +109,11 @@ export default function Navbar() {
 
           {/* Right Section */}
           <div className="flex items-center gap-3">
-            {/* Settings Icon */}
+            {/* Settings Icon - Only visible on desktop when logged in */}
             {session && (
               <button
                 onClick={() => router.push('/admin')}
-                className="p-2.5 glass-light hover:glass text-gray-300 hover:text-cyan-400 rounded-lg transition-all duration-300 hover-lift"
+                className="hidden md:flex p-2.5 glass-light hover:glass text-gray-300 hover:text-cyan-400 rounded-lg transition-all duration-300 hover-lift items-center justify-center"
                 title="Admin Settings"
               >
                 <Settings className="w-5 h-5" />
@@ -235,8 +235,8 @@ export default function Navbar() {
                   setShowMobileMenu(false);
                 }}
                 className={`w-full text-left px-4 py-3 rounded-lg transition-all ${router.pathname === '/'
-                    ? 'glass text-cyan-400'
-                    : 'text-gray-300 hover:glass-light'
+                  ? 'glass text-cyan-400'
+                  : 'text-gray-300 hover:glass-light'
                   }`}
               >
                 🔍 Search
@@ -247,8 +247,8 @@ export default function Navbar() {
                   setShowMobileMenu(false);
                 }}
                 className={`w-full text-left px-4 py-3 rounded-lg transition-all ${router.pathname === '/generator'
-                    ? 'glass text-purple-400'
-                    : 'text-gray-300 hover:glass-light'
+                  ? 'glass text-purple-400'
+                  : 'text-gray-300 hover:glass-light'
                   }`}
               >
                 🎨 Generator
@@ -261,8 +261,8 @@ export default function Navbar() {
                       setShowMobileMenu(false);
                     }}
                     className={`w-full text-left px-4 py-3 rounded-lg transition-all ${router.pathname === '/learn'
-                        ? 'glass text-orange-400'
-                        : 'text-gray-300 hover:glass-light'
+                      ? 'glass text-orange-400'
+                      : 'text-gray-300 hover:glass-light'
                       }`}
                   >
                     🎓 Learn
@@ -273,8 +273,8 @@ export default function Navbar() {
                       setShowMobileMenu(false);
                     }}
                     className={`w-full text-left px-4 py-3 rounded-lg transition-all ${router.pathname === '/collections'
-                        ? 'glass text-cyan-400'
-                        : 'text-gray-300 hover:glass-light'
+                      ? 'glass text-cyan-400'
+                      : 'text-gray-300 hover:glass-light'
                       }`}
                   >
                     💾 Collections
@@ -285,8 +285,8 @@ export default function Navbar() {
                       setShowMobileMenu(false);
                     }}
                     className={`w-full text-left px-4 py-3 rounded-lg transition-all ${router.pathname === '/history'
-                        ? 'glass text-cyan-400'
-                        : 'text-gray-300 hover:glass-light'
+                      ? 'glass text-cyan-400'
+                      : 'text-gray-300 hover:glass-light'
                       }`}
                   >
                     📜 History
@@ -297,8 +297,8 @@ export default function Navbar() {
                       setShowMobileMenu(false);
                     }}
                     className={`w-full text-left px-4 py-3 rounded-lg transition-all ${router.pathname === '/admin'
-                        ? 'glass text-purple-400'
-                        : 'text-gray-300 hover:glass-light'
+                      ? 'glass text-purple-400'
+                      : 'text-gray-300 hover:glass-light'
                       }`}
                   >
                     ⚙️ Admin
