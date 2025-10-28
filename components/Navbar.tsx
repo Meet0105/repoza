@@ -234,11 +234,10 @@ export default function Navbar() {
                   router.push('/');
                   setShowMobileMenu(false);
                 }}
-                className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
-                  router.pathname === '/'
+                className={`w-full text-left px-4 py-3 rounded-lg transition-all ${router.pathname === '/'
                     ? 'glass text-cyan-400'
                     : 'text-gray-300 hover:glass-light'
-                }`}
+                  }`}
               >
                 🔍 Search
               </button>
@@ -247,11 +246,10 @@ export default function Navbar() {
                   router.push('/generator');
                   setShowMobileMenu(false);
                 }}
-                className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
-                  router.pathname === '/generator'
+                className={`w-full text-left px-4 py-3 rounded-lg transition-all ${router.pathname === '/generator'
                     ? 'glass text-purple-400'
                     : 'text-gray-300 hover:glass-light'
-                }`}
+                  }`}
               >
                 🎨 Generator
               </button>
@@ -262,11 +260,10 @@ export default function Navbar() {
                       router.push('/learn');
                       setShowMobileMenu(false);
                     }}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
-                      router.pathname === '/learn'
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${router.pathname === '/learn'
                         ? 'glass text-orange-400'
                         : 'text-gray-300 hover:glass-light'
-                    }`}
+                      }`}
                   >
                     🎓 Learn
                   </button>
@@ -275,11 +272,10 @@ export default function Navbar() {
                       router.push('/collections');
                       setShowMobileMenu(false);
                     }}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
-                      router.pathname === '/collections'
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${router.pathname === '/collections'
                         ? 'glass text-cyan-400'
                         : 'text-gray-300 hover:glass-light'
-                    }`}
+                      }`}
                   >
                     💾 Collections
                   </button>
@@ -288,11 +284,10 @@ export default function Navbar() {
                       router.push('/history');
                       setShowMobileMenu(false);
                     }}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
-                      router.pathname === '/history'
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${router.pathname === '/history'
                         ? 'glass text-cyan-400'
                         : 'text-gray-300 hover:glass-light'
-                    }`}
+                      }`}
                   >
                     📜 History
                   </button>
@@ -301,11 +296,10 @@ export default function Navbar() {
                       router.push('/admin');
                       setShowMobileMenu(false);
                     }}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
-                      router.pathname === '/admin'
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${router.pathname === '/admin'
                         ? 'glass text-purple-400'
                         : 'text-gray-300 hover:glass-light'
-                    }`}
+                      }`}
                   >
                     ⚙️ Admin
                   </button>
