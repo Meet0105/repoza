@@ -1,12 +1,13 @@
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { Settings, LogOut, History, User, LogIn } from 'lucide-react';
+import { Settings, LogOut, History, User, LogIn, Menu, X } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 
 export default function Navbar() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
@@ -51,7 +52,7 @@ export default function Navbar() {
             </span>
           </button>
 
-          {/* Navigation Links */}
+          {/* Navigation Links - Desktop */}
           <div className="hidden md:flex items-center gap-6">
             <button
               onClick={() => router.push('/')}
@@ -93,6 +94,18 @@ export default function Navbar() {
               </>
             )}
           </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setShowMobileMenu(!showMobileMenu)}
+            className="md:hidden p-2 glass-light hover:glass rounded-lg transition-colors"
+          >
+            {showMobileMenu ? (
+              <X className="w-6 h-6 text-white" />
+            ) : (
+              <Menu className="w-6 h-6 text-white" />
+            )}
+          </button>
 
           {/* Right Section */}
           <div className="flex items-center gap-3">
@@ -211,6 +224,105 @@ export default function Navbar() {
             )}
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {showMobileMenu && (
+          <div className="md:hidden border-t border-white/10 animate-slide-up">
+            <div className="px-4 py-4 space-y-2">
+              <button
+                onClick={() => {
+                  router.push('/');
+                  setShowMobileMenu(false);
+                }}
+                className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
+                  router.pathname === '/'
+                    ? 'glass text-cyan-400'
+                    : 'text-gray-300 hover:glass-light'
+                }`}
+              >
+                🔍 Search
+              </button>
+              <button
+                onClick={() => {
+                  router.push('/generator');
+                  setShowMobileMenu(false);
+                }}
+                className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
+                  router.pathname === '/generator'
+                    ? 'glass text-purple-400'
+                    : 'text-gray-300 hover:glass-light'
+                }`}
+              >
+                🎨 Generator
+              </button>
+              {session && (
+                <>
+                  <button
+                    onClick={() => {
+                      router.push('/learn');
+                      setShowMobileMenu(false);
+                    }}
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
+                      router.pathname === '/learn'
+                        ? 'glass text-orange-400'
+                        : 'text-gray-300 hover:glass-light'
+                    }`}
+                  >
+                    🎓 Learn
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push('/collections');
+                      setShowMobileMenu(false);
+                    }}
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
+                      router.pathname === '/collections'
+                        ? 'glass text-cyan-400'
+                        : 'text-gray-300 hover:glass-light'
+                    }`}
+                  >
+                    💾 Collections
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push('/history');
+                      setShowMobileMenu(false);
+                    }}
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
+                      router.pathname === '/history'
+                        ? 'glass text-cyan-400'
+                        : 'text-gray-300 hover:glass-light'
+                    }`}
+                  >
+                    📜 History
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push('/admin');
+                      setShowMobileMenu(false);
+                    }}
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
+                      router.pathname === '/admin'
+                        ? 'glass text-purple-400'
+                        : 'text-gray-300 hover:glass-light'
+                    }`}
+                  >
+                    ⚙️ Admin
+                  </button>
+                </>
+              )}
+              {!session && (
+                <button
+                  onClick={() => signIn()}
+                  className="w-full btn-primary justify-center"
+                >
+                  <LogIn className="w-5 h-5" />
+                  <span>Login</span>
+                </button>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );

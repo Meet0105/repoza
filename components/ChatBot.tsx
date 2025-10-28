@@ -105,7 +105,7 @@ What would you like to know?`,
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 w-14 h-14 rounded-full gradient-primary shadow-lg hover:shadow-glow-cyan flex items-center justify-center transition-all duration-300 hover:scale-110 z-50 animate-bounce"
+        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 w-14 h-14 rounded-full gradient-primary shadow-lg hover:shadow-glow-cyan flex items-center justify-center transition-all duration-300 hover:scale-110 z-50 animate-bounce"
         title="Chat with AI Assistant"
       >
         <MessageCircle className="w-6 h-6 text-white" />
@@ -115,8 +115,8 @@ What would you like to know?`,
 
   return (
     <div
-      className={`fixed bottom-6 right-6 z-50 transition-all duration-300 ${
-        isMinimized ? 'w-14 h-14' : 'w-96 h-[600px]'
+      className={`fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 transition-all duration-300 ${
+        isMinimized ? 'w-14 h-14' : 'w-[calc(100vw-2rem)] md:w-96 h-[calc(100vh-8rem)] md:h-[600px]'
       }`}
     >
       {isMinimized ? (
@@ -226,7 +226,7 @@ What would you like to know?`,
           {showQuickActions && messages.length <= 1 && (
             <div className="px-4 pb-3">
               <p className="text-xs text-gray-400 mb-2">Quick actions:</p>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {quickActions.map((action, idx) => (
                   <button
                     key={idx}
