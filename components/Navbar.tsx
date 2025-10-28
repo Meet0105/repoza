@@ -95,20 +95,19 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setShowMobileMenu(!showMobileMenu)}
-            className="md:hidden p-2 glass-light hover:glass rounded-lg transition-colors"
-          >
-            {showMobileMenu ? (
-              <X className="w-6 h-6 text-white" />
-            ) : (
-              <Menu className="w-6 h-6 text-white" />
-            )}
-          </button>
-
           {/* Right Section */}
           <div className="flex items-center gap-3">
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
+              className="md:hidden p-2 glass-light hover:glass rounded-lg transition-colors"
+            >
+              {showMobileMenu ? (
+                <X className="w-6 h-6 text-white" />
+              ) : (
+                <Menu className="w-6 h-6 text-white" />
+              )}
+            </button>
             {/* Settings Icon - Only visible on desktop when logged in */}
             {session && (
               <button
