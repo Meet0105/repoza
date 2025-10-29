@@ -5,6 +5,7 @@ import { Star, GitFork, Eye, AlertCircle, Code2, Calendar, Sparkles, ExternalLin
 import ReactMarkdown from 'react-markdown';
 import Link from 'next/link';
 import { saveRepoHistory } from '../../../utils/history';
+import Navbar from '../../../components/Navbar';
 import RepoQA from '../../../components/RepoQA';
 import DeployButton from '../../../components/DeployButton';
 import CodeViewer from '../../../components/CodeViewer';
@@ -240,7 +241,9 @@ export default function RepoDetails() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 flex items-center justify-center">
+            <>
+                <Navbar />
+                <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 flex items-center justify-center pt-20">
                 <div className="text-center">
                     <div className="w-20 h-20 mx-auto mb-6">
                         <svg className="animate-spin text-cyan-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -256,7 +259,9 @@ export default function RepoDetails() {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 flex items-center justify-center">
+            <>
+                <Navbar />
+                <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 flex items-center justify-center pt-20">
                 <div className="text-center glass rounded-2xl p-12 max-w-md animate-slide-up">
                     <AlertCircle className="w-20 h-20 text-red-400 mx-auto mb-6" />
                     <div className="text-white text-2xl font-bold mb-4">Oops!</div>
@@ -275,7 +280,9 @@ export default function RepoDetails() {
     const { repository, readme } = data;
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 text-white pt-20">
+        <>
+            <Navbar />
+            <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 text-white pt-20">
             <div className="max-w-7xl mx-auto px-4 py-12">
                 {/* Header */}
                 <div className="mb-12 animate-slide-up">
