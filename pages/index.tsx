@@ -379,10 +379,10 @@ export default function Home() {
               resultsCount={results.length}
             />
 
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-1">
               <div className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-purple-400" />
-                <h2 className="text-xl font-bold text-white">
+                <TrendingUp className="w-4 h-4 text-purple-400" />
+                <h2 className="text-lg font-bold text-white">
                   Top {results.length} Repositories
                 </h2>
               </div>
