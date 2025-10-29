@@ -343,7 +343,7 @@ html {
    ============================================ */
 
 .card {
-  @apply glass rounded-xl p-4 shadow-md;
+  @apply glass rounded-xl p-2 shadow-md;
   @apply transition-all duration-300;
 }
 

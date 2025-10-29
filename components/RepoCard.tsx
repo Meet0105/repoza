@@ -43,46 +43,46 @@ export default function RepoCard({ repo, parsedQuery }: Props) {
 
     return (
         <div className="card-hover group animate-slide-up">
-            <div className="flex items-start justify-between mb-1">
+            <div className="flex items-start justify-between mb-0.5">
                 <div className="flex-1">
                     <Link href={`/repo/${repo.full_name.split('/')[0]}/${repo.full_name.split('/')[1]}`}>
-                        <h3 className="font-semibold text-lg text-white mb-0.5 hover:text-cyan-400 cursor-pointer transition-colors group-hover:gradient-text-primary">
+                        <h3 className="font-semibold text-base text-white mb-0 hover:text-cyan-400 cursor-pointer transition-colors group-hover:gradient-text-primary leading-tight">
                             {repo.full_name}
                         </h3>
                     </Link>
-                    <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
+                    <div className="flex flex-wrap items-center gap-1 mt-0.5">
                         {repo.language && (
-                            <span className="badge-cyan text-xs">
+                            <span className="badge-cyan text-xs px-1.5 py-0">
                                 {repo.language}
                             </span>
                         )}
                         {repo.aiRelevance !== undefined && repo.aiRelevance > 0 && (
-                            <span className="badge-purple text-xs inline-flex items-center gap-1">
+                            <span className="badge-purple text-xs inline-flex items-center gap-0.5 px-1.5 py-0">
                                 <Sparkles className="w-3 h-3" />
-                                {(repo.aiRelevance * 100).toFixed(0)}% AI Match
+                                {(repo.aiRelevance * 100).toFixed(0)}%
                             </span>
                         )}
                     </div>
                 </div>
                 {repo.score && (
-                    <div className="glass-light px-2 py-1 rounded-lg">
+                    <div className="glass-light px-1.5 py-0.5 rounded">
                         <span className="text-xs text-cyan-400 font-mono font-semibold">
-                            Score: {repo.score.toFixed(0)}
+                            {repo.score.toFixed(0)}
                         </span>
                     </div>
                 )}
             </div>
 
-            <p className="text-sm text-gray-300 mb-1.5 line-clamp-2 leading-snug">
+            <p className="text-xs text-gray-300 mb-1 line-clamp-2 leading-tight">
                 {repo.description || 'No description available'}
             </p>
 
             {repo.topics && repo.topics.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mb-1.5">
+                <div className="flex flex-wrap gap-1 mb-1">
                     {repo.topics.slice(0, 5).map((topic: string) => (
                         <span
                             key={topic}
-                            className="px-2 py-0.5 text-xs glass-light text-gray-300 rounded-md hover:text-cyan-400 transition-colors cursor-default"
+                            className="px-1.5 py-0 text-xs glass-light text-gray-300 rounded hover:text-cyan-400 transition-colors cursor-default"
                         >
                             #{topic}
                         </span>
@@ -91,43 +91,43 @@ export default function RepoCard({ repo, parsedQuery }: Props) {
             )}
 
             {/* Stats and Actions */}
-            <div className="flex items-center justify-between text-sm mb-1.5 pt-1.5 border-t border-white/10">
-                <div className="flex gap-4 text-gray-400">
-                    <span className="flex items-center gap-1.5 hover:text-yellow-400 transition-colors">
-                        <Star className="w-4 h-4" />
+            <div className="flex items-center justify-between text-xs mb-1 pt-1 border-t border-white/10">
+                <div className="flex gap-3 text-gray-400">
+                    <span className="flex items-center gap-1 hover:text-yellow-400 transition-colors">
+                        <Star className="w-3.5 h-3.5" />
                         <span className="font-semibold">{repo.stargazers_count.toLocaleString()}</span>
                     </span>
-                    <span className="flex items-center gap-1.5 hover:text-cyan-400 transition-colors">
-                        <GitFork className="w-4 h-4" />
+                    <span className="flex items-center gap-1 hover:text-cyan-400 transition-colors">
+                        <GitFork className="w-3.5 h-3.5" />
                         <span className="font-semibold">{repo.forks_count.toLocaleString()}</span>
                     </span>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-1">
                     {session && (
                         <button
                             onClick={() => setShowCollectionModal(true)}
-                            className="p-2 glass-light hover:glass rounded-lg transition-all duration-300 text-gray-400 hover:text-cyan-400 hover-lift"
+                            className="p-1 glass-light hover:glass rounded transition-all duration-300 text-gray-400 hover:text-cyan-400"
                             title="Add to collection"
                         >
-                            <Heart className="w-4 h-4" />
+                            <Heart className="w-3.5 h-3.5" />
                         </button>
                     )}
                     <button
                         onClick={copyCloneCommand}
-                        className="p-2 glass-light hover:glass rounded-lg transition-all duration-300 text-gray-400 hover:text-cyan-400 hover-lift"
+                        className="p-1 glass-light hover:glass rounded transition-all duration-300 text-gray-400 hover:text-cyan-400"
                         title="Copy clone command"
                     >
-                        <Copy className="w-4 h-4" />
+                        <Copy className="w-3.5 h-3.5" />
                     </button>
                     <a
                         href={repo.html_url}
                         target="_blank"
                         rel="noreferrer"
-                        className="p-2 glass-light hover:glass rounded-lg transition-all duration-300 text-gray-400 hover:text-cyan-400 hover-lift"
+                        className="p-1 glass-light hover:glass rounded transition-all duration-300 text-gray-400 hover:text-cyan-400"
                         title="View on GitHub"
                     >
-                        <ExternalLink className="w-4 h-4" />
+                        <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                 </div>
             </div>
@@ -136,15 +136,15 @@ export default function RepoCard({ repo, parsedQuery }: Props) {
             <button
                 onClick={generateBoilerplate}
                 disabled={generating}
-                className="w-full btn-ai text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full btn-ai text-xs py-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-                <Sparkles className="w-4 h-4" />
+                <Sparkles className="w-3.5 h-3.5" />
                 <span>{generating ? 'Generating...' : 'Generate Boilerplate'}</span>
             </button>
 
             {/* Boilerplate Output */}
             {showBoilerplate && (
-                <div className="mt-2 glass-strong rounded-lg p-3 animate-slide-up">
+                <div className="mt-1.5 glass-strong rounded p-2 animate-slide-up">
                     <pre className="text-gray-300 text-xs whitespace-pre-wrap max-h-48 overflow-auto font-mono">
                         {boilerplate}
                     </pre>
