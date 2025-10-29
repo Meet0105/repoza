@@ -212,17 +212,17 @@ export default function SetupGuide({ owner, repo, readme }: Props) {
                   code: ({ node, inline, ...props }: any) =>
                     inline ? (
                       <code
-                        className="bg-black/40 text-cyan-400 px-2 py-0.5 rounded text-sm font-mono"
+                        className="glass-light text-cyan-400 px-2 py-0.5 rounded text-sm font-mono border border-cyan-500/20"
                         {...props}
                       />
                     ) : (
                       <code
-                        className="block bg-black/60 text-gray-300 p-4 rounded-lg overflow-x-auto text-sm font-mono border border-white/10"
+                        className="block glass-strong text-gray-200 p-4 rounded-lg overflow-x-auto text-sm font-mono border border-white/20 shadow-lg"
                         {...props}
                       />
                     ),
                   pre: ({ node, ...props }) => (
-                    <pre className="bg-black/60 rounded-lg overflow-x-auto mb-4" {...props} />
+                    <pre className="glass-strong rounded-lg overflow-x-auto mb-4 border border-white/10" {...props} />
                   ),
                   ul: ({ node, ...props }) => (
                     <ul className="list-disc list-inside text-gray-300 space-y-2 mb-4" {...props} />
@@ -253,7 +253,7 @@ export default function SetupGuide({ owner, repo, readme }: Props) {
           <div className="glass-light rounded-lg p-4 border border-white/10">
             <h3 className="text-sm font-semibold text-white mb-3">Quick Clone Command</h3>
             <div className="flex items-center gap-2">
-              <code className="flex-1 bg-black/60 text-cyan-400 px-4 py-2 rounded font-mono text-sm">
+              <code className="flex-1 glass-strong text-cyan-400 px-4 py-2 rounded font-mono text-sm border border-cyan-500/20">
                 git clone https://github.com/{owner}/{repo}.git
               </code>
               <button
