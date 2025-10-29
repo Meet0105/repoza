@@ -43,14 +43,14 @@ export default function RepoCard({ repo, parsedQuery }: Props) {
 
     return (
         <div className="card-hover group animate-slide-up">
-            <div className="flex items-start justify-between mb-0.5">
+            <div className="flex items-start justify-between mb-0">
                 <div className="flex-1">
                     <Link href={`/repo/${repo.full_name.split('/')[0]}/${repo.full_name.split('/')[1]}`}>
-                        <h3 className="font-semibold text-base text-white mb-0 hover:text-cyan-400 cursor-pointer transition-colors group-hover:gradient-text-primary leading-tight">
+                        <h3 className="font-semibold text-sm text-white mb-0 hover:text-cyan-400 cursor-pointer transition-colors group-hover:gradient-text-primary leading-tight">
                             {repo.full_name}
                         </h3>
                     </Link>
-                    <div className="flex flex-wrap items-center gap-1 mt-0.5">
+                    <div className="flex flex-wrap items-center gap-0.5 mt-0">
                         {repo.language && (
                             <span className="badge-cyan text-xs px-1.5 py-0">
                                 {repo.language}
@@ -73,12 +73,12 @@ export default function RepoCard({ repo, parsedQuery }: Props) {
                 )}
             </div>
 
-            <p className="text-xs text-gray-300 mb-1 line-clamp-2 leading-tight">
+            <p className="text-xs text-gray-300 mb-0.5 line-clamp-2 leading-tight">
                 {repo.description || 'No description available'}
             </p>
 
             {repo.topics && repo.topics.length > 0 && (
-                <div className="flex flex-wrap gap-1 mb-1">
+                <div className="flex flex-wrap gap-0.5 mb-0.5">
                     {repo.topics.slice(0, 5).map((topic: string) => (
                         <span
                             key={topic}
@@ -91,8 +91,8 @@ export default function RepoCard({ repo, parsedQuery }: Props) {
             )}
 
             {/* Stats and Actions */}
-            <div className="flex items-center justify-between text-xs mb-1 pt-1 border-t border-white/10">
-                <div className="flex gap-3 text-gray-400">
+            <div className="flex items-center justify-between text-xs mb-0.5 pt-0.5 border-t border-white/10">
+                <div className="flex gap-2 text-gray-400">
                     <span className="flex items-center gap-1 hover:text-yellow-400 transition-colors">
                         <Star className="w-3.5 h-3.5" />
                         <span className="font-semibold">{repo.stargazers_count.toLocaleString()}</span>
