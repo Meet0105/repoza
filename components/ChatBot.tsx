@@ -116,8 +116,8 @@ What would you like to know?`,
   return (
     <div
       className={`fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 transition-all duration-300 ${isMinimized
-          ? 'w-14 h-14'
-          : 'w-[calc(100vw-2rem)] sm:w-[380px] md:w-[420px] lg:w-[480px] xl:w-[520px] h-[calc(100vh-8rem)] sm:h-[480px] md:h-[550px] lg:h-[620px] xl:h-[680px]'
+        ? 'w-14 h-14'
+        : 'w-[calc(100vw-2rem)] sm:w-[360px] md:w-[400px] lg:w-[450px] xl:w-[500px] h-[calc(100vh-8rem)] sm:h-[450px] md:h-[520px] lg:h-[580px] xl:h-[640px]'
         }`}
     >
       {isMinimized ? (
