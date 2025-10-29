@@ -136,15 +136,15 @@ export default function RepoCard({ repo, parsedQuery }: Props) {
             <button
                 onClick={generateBoilerplate}
                 disabled={generating}
-                className="w-full btn-ai text-xs py-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full btn-ai text-xs py-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 <Sparkles className="w-3 h-3" />
-                <span>{generating ? 'Generating...' : 'Generate Boilerplate'}</span>
+                <span>{generating ? 'Generating...' : 'Generate'}</span>
             </button>
 
             {/* Boilerplate Output */}
             {showBoilerplate && (
-                <div className="mt-1 glass-strong rounded p-1.5 animate-slide-up">
+                <div className="mt-0.5 glass-strong rounded p-1.5 animate-slide-up">
                     <pre className="text-gray-300 text-xs whitespace-pre-wrap max-h-48 overflow-auto font-mono">
                         {boilerplate}
                     </pre>
