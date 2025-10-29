@@ -149,12 +149,12 @@ export default function Home() {
             {/* Navbar with Auth */}
             <Navbar />
 
-            <div className="container mx-auto px-4 pt-20 pb-12 max-w-6xl">
+            <div className="container mx-auto px-4 pt-24 pb-12 max-w-6xl">
                 {/* Hero Section */}
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-center mb-12"
+                    className="text-center mb-16"
                 >
                     {/* Icon + Title */}
                     <div className="flex items-center justify-center gap-4 mb-6">

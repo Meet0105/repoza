@@ -43,7 +43,7 @@ export default function RepoCard({ repo, parsedQuery }: Props) {
 
     return (
         <div className="card-hover group animate-slide-up">
-            <div className="flex items-start justify-between mb-4">
+            <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
                     <Link href={`/repo/${repo.full_name.split('/')[0]}/${repo.full_name.split('/')[1]}`}>
                         <h3 className="font-semibold text-xl text-white mb-2 hover:text-cyan-400 cursor-pointer transition-colors group-hover:gradient-text-primary">
@@ -73,12 +73,12 @@ export default function RepoCard({ repo, parsedQuery }: Props) {
                 )}
             </div>
 
-            <p className="text-sm text-gray-300 mb-4 line-clamp-2 leading-relaxed">
+            <p className="text-sm text-gray-300 mb-3 line-clamp-2 leading-relaxed">
                 {repo.description || 'No description available'}
             </p>
 
             {repo.topics && repo.topics.length > 0 && (
-                <div className="flex flex-wrap gap-2 mb-4">
+                <div className="flex flex-wrap gap-2 mb-3">
                     {repo.topics.slice(0, 5).map((topic: string) => (
                         <span
                             key={topic}
@@ -91,7 +91,7 @@ export default function RepoCard({ repo, parsedQuery }: Props) {
             )}
 
             {/* Stats and Actions */}
-            <div className="flex items-center justify-between text-sm mb-4 pt-4 border-t border-white/10">
+            <div className="flex items-center justify-between text-sm mb-3 pt-3 border-t border-white/10">
                 <div className="flex gap-6 text-gray-400">
                     <span className="flex items-center gap-2 hover:text-yellow-400 transition-colors">
                         <Star className="w-4 h-4" />
