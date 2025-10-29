@@ -379,20 +379,20 @@ export default function Home() {
               resultsCount={results.length}
             />
 
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
-                <TrendingUp className="w-6 h-6 text-purple-400" />
-                <h2 className="text-2xl font-bold text-white">
+                <TrendingUp className="w-5 h-5 text-purple-400" />
+                <h2 className="text-xl font-bold text-white">
                   Top {results.length} Repositories
                 </h2>
               </div>
               {totalCount > 0 && (
-                <p className="text-gray-400 text-sm">
-                  Showing {results.length} of {totalCount.toLocaleString()} results
+                <p className="text-gray-400 text-xs">
+                  {results.length} of {totalCount.toLocaleString()}
                 </p>
               )}
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
               {results.map((repo, idx) => (
                 <motion.div
                   key={repo.id}
