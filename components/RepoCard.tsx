@@ -43,14 +43,14 @@ export default function RepoCard({ repo, parsedQuery }: Props) {
 
     return (
         <div className="card-hover group animate-slide-up">
-            <div className="flex items-start justify-between mb-3">
+            <div className="flex items-start justify-between mb-1">
                 <div className="flex-1">
                     <Link href={`/repo/${repo.full_name.split('/')[0]}/${repo.full_name.split('/')[1]}`}>
-                        <h3 className="font-semibold text-xl text-white mb-2 hover:text-cyan-400 cursor-pointer transition-colors group-hover:gradient-text-primary">
+                        <h3 className="font-semibold text-lg text-white mb-0.5 hover:text-cyan-400 cursor-pointer transition-colors group-hover:gradient-text-primary">
                             {repo.full_name}
                         </h3>
                     </Link>
-                    <div className="flex flex-wrap items-center gap-2 mt-2">
+                    <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
                         {repo.language && (
                             <span className="badge-cyan text-xs">
                                 {repo.language}
@@ -65,7 +65,7 @@ export default function RepoCard({ repo, parsedQuery }: Props) {
                     </div>
                 </div>
                 {repo.score && (
-                    <div className="glass-light px-3 py-1.5 rounded-lg">
+                    <div className="glass-light px-2 py-1 rounded-lg">
                         <span className="text-xs text-cyan-400 font-mono font-semibold">
                             Score: {repo.score.toFixed(0)}
                         </span>
@@ -73,16 +73,16 @@ export default function RepoCard({ repo, parsedQuery }: Props) {
                 )}
             </div>
 
-            <p className="text-sm text-gray-300 mb-3 line-clamp-2 leading-relaxed">
+            <p className="text-sm text-gray-300 mb-1.5 line-clamp-2 leading-snug">
                 {repo.description || 'No description available'}
             </p>
 
             {repo.topics && repo.topics.length > 0 && (
-                <div className="flex flex-wrap gap-2 mb-3">
+                <div className="flex flex-wrap gap-1.5 mb-1.5">
                     {repo.topics.slice(0, 5).map((topic: string) => (
                         <span
                             key={topic}
-                            className="px-2.5 py-1 text-xs glass-light text-gray-300 rounded-md hover:text-cyan-400 transition-colors cursor-default"
+                            className="px-2 py-0.5 text-xs glass-light text-gray-300 rounded-md hover:text-cyan-400 transition-colors cursor-default"
                         >
                             #{topic}
                         </span>
@@ -91,13 +91,13 @@ export default function RepoCard({ repo, parsedQuery }: Props) {
             )}
 
             {/* Stats and Actions */}
-            <div className="flex items-center justify-between text-sm mb-3 pt-3 border-t border-white/10">
-                <div className="flex gap-6 text-gray-400">
-                    <span className="flex items-center gap-2 hover:text-yellow-400 transition-colors">
+            <div className="flex items-center justify-between text-sm mb-1.5 pt-1.5 border-t border-white/10">
+                <div className="flex gap-4 text-gray-400">
+                    <span className="flex items-center gap-1.5 hover:text-yellow-400 transition-colors">
                         <Star className="w-4 h-4" />
                         <span className="font-semibold">{repo.stargazers_count.toLocaleString()}</span>
                     </span>
-                    <span className="flex items-center gap-2 hover:text-cyan-400 transition-colors">
+                    <span className="flex items-center gap-1.5 hover:text-cyan-400 transition-colors">
                         <GitFork className="w-4 h-4" />
                         <span className="font-semibold">{repo.forks_count.toLocaleString()}</span>
                     </span>
@@ -144,7 +144,7 @@ export default function RepoCard({ repo, parsedQuery }: Props) {
 
             {/* Boilerplate Output */}
             {showBoilerplate && (
-                <div className="mt-4 glass-strong rounded-lg p-4 animate-slide-up">
+                <div className="mt-2 glass-strong rounded-lg p-3 animate-slide-up">
                     <pre className="text-gray-300 text-xs whitespace-pre-wrap max-h-48 overflow-auto font-mono">
                         {boilerplate}
                     </pre>
