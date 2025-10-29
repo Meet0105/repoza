@@ -1,7 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
+import { requireAdminApi } from '../../../utils/adminApiAuth';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const isAuthorized = await requireAdminApi(req, res);
+  if (!isAuthorized) return;
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }

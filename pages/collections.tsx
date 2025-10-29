@@ -202,11 +202,10 @@ function CollectionsContent() {
                     {collections.map((collection) => (
                       <div
                         key={collection._id}
-                        className={`p-4 rounded-lg cursor-pointer transition-all border ${
-                          selectedCollection?._id === collection._id
-                            ? 'glass-strong border-purple-500/50 shadow-lg'
-                            : 'glass-light border-white/10 hover:border-purple-500/50 hover:glass'
-                        }`}
+                        className={`p-4 rounded-lg cursor-pointer transition-all border ${selectedCollection?._id === collection._id
+                          ? 'glass-strong border-purple-500/50 shadow-lg'
+                          : 'glass-light border-white/10 hover:border-purple-500/50 hover:glass'
+                          }`}
                         onClick={() => setSelectedCollection(collection)}
                       >
                         <div className="flex items-start justify-between">

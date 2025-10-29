@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Settings, Key, Palette, Sliders, BarChart3, Save, TestTube } from 'lucide-react';
-import ProtectedRoute from '../components/ProtectedRoute';
+import { Settings, Key, Palette, Sliders, BarChart3, Save, TestTube, Shield } from 'lucide-react';
+import { GetServerSideProps } from 'next';
+import { requireAdmin } from '../utils/adminAuth';
 import Navbar from '../components/Navbar';
 
 function AdminPageContent() {
@@ -454,11 +455,15 @@ function StatCard({ label, value, icon }: any) {
 }
 
 
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return requireAdmin(context);
+};
+
 export default function AdminPage() {
   return (
-    <ProtectedRoute>
+    <>
       <Navbar />
       <AdminPageContent />
-    </ProtectedRoute>
+    </>
   );
 }
