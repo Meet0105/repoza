@@ -3,12 +3,22 @@ import { useRouter } from 'next/router';
 import { Settings, LogOut, History, User, LogIn, Menu, X } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 
+// Check if user is admin
+function isAdmin(email: string | null | undefined): boolean {
+  if (!email) return false;
+  const adminEmails = process.env.NEXT_PUBLIC_ADMIN_EMAILS?.split(',').map(e => e.trim().toLowerCase()) || [];
+  return adminEmails.includes(email.toLowerCase());
+}
+
 export default function Navbar() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [showDropdown, setShowDropdown] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
+  // Check if current user is admin
+  const userIsAdmin = isAdmin(session?.user?.email);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -108,8 +118,8 @@ export default function Navbar() {
                 <Menu className="w-6 h-6 text-white" />
               )}
             </button>
-            {/* Settings Icon - Only visible on desktop when logged in */}
-            {session && (
+            {/* Settings Icon - Only visible to admins on desktop */}
+            {session && userIsAdmin && (
               <button
                 onClick={() => router.push('/admin')}
                 className="hidden md:flex p-2.5 glass-light hover:glass text-gray-300 hover:text-cyan-400 rounded-lg transition-all duration-300 hover-lift items-center justify-center"
@@ -185,16 +195,21 @@ export default function Navbar() {
                         <span className="text-sm font-medium">History</span>
                       </button>
 
-                      <button
-                        onClick={() => {
-                          router.push('/admin');
-                          setShowDropdown(false);
-                        }}
-                        className="w-full px-4 py-2.5 text-left text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-3 transition-all duration-300"
-                      >
-                        <Settings className="w-4 h-4 text-purple-400" />
-                        <span className="text-sm font-medium">Admin Settings</span>
-                      </button>
+                      {/* Admin Settings - Only for admins */}
+                      {userIsAdmin && (
+                        <>
+                          <button
+                            onClick={() => {
+                              router.push('/admin');
+                              setShowDropdown(false);
+                            }}
+                            className="w-full px-4 py-2.5 text-left text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-3 transition-all duration-300"
+                          >
+                            <Settings className="w-4 h-4 text-purple-400" />
+                            <span className="text-sm font-medium">Admin Settings</span>
+                          </button>
+                        </>
+                      )}
 
                       <div className="border-t border-white/10 my-2"></div>
 
@@ -290,18 +305,21 @@ export default function Navbar() {
                   >
                     📜 History
                   </button>
-                  <button
-                    onClick={() => {
-                      router.push('/admin');
-                      setShowMobileMenu(false);
-                    }}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-all ${router.pathname === '/admin'
-                      ? 'glass text-purple-400'
-                      : 'text-gray-300 hover:glass-light'
-                      }`}
-                  >
-                    ⚙️ Admin
-                  </button>
+                  {/* Admin - Only for admins */}
+                  {userIsAdmin && (
+                    <button
+                      onClick={() => {
+                        router.push('/admin');
+                        setShowMobileMenu(false);
+                      }}
+                      className={`w-full text-left px-4 py-3 rounded-lg transition-all ${router.pathname === '/admin'
+                        ? 'glass text-purple-400'
+                        : 'text-gray-300 hover:glass-light'
+                        }`}
+                    >
+                      ⚙️ Admin
+                    </button>
+                  )}
                 </>
               )}
               {!session && (
