@@ -244,16 +244,17 @@ export default function RepoDetails() {
             <>
                 <Navbar />
                 <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 flex items-center justify-center pt-20">
-                <div className="text-center">
-                    <div className="w-20 h-20 mx-auto mb-6">
-                        <svg className="animate-spin text-cyan-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
+                    <div className="text-center">
+                        <div className="w-20 h-20 mx-auto mb-6">
+                            <svg className="animate-spin text-cyan-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </div>
+                        <div className="text-white text-xl font-semibold">Loading repository details...</div>
                     </div>
-                    <div className="text-white text-xl font-semibold">Loading repository details...</div>
                 </div>
-            </div>
+            </>
         );
     }
 
@@ -262,16 +263,17 @@ export default function RepoDetails() {
             <>
                 <Navbar />
                 <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 flex items-center justify-center pt-20">
-                <div className="text-center glass rounded-2xl p-12 max-w-md animate-slide-up">
-                    <AlertCircle className="w-20 h-20 text-red-400 mx-auto mb-6" />
-                    <div className="text-white text-2xl font-bold mb-4">Oops!</div>
-                    <div className="text-gray-300 text-lg mb-6">{error}</div>
-                    <Link href="/" className="btn-primary inline-flex items-center gap-2">
-                        <ArrowLeft className="w-4 h-4" />
-                        <span>Back to search</span>
-                    </Link>
+                    <div className="text-center glass rounded-2xl p-12 max-w-md animate-slide-up">
+                        <AlertCircle className="w-20 h-20 text-red-400 mx-auto mb-6" />
+                        <div className="text-white text-2xl font-bold mb-4">Oops!</div>
+                        <div className="text-gray-300 text-lg mb-6">{error}</div>
+                        <Link href="/" className="btn-primary inline-flex items-center gap-2">
+                            <ArrowLeft className="w-4 h-4" />
+                            <span>Back to search</span>
+                        </Link>
+                    </div>
                 </div>
-            </div>
+            </>
         );
     }
 
@@ -594,5 +596,6 @@ export default function RepoDetails() {
                 )}
             </div>
         </div>
+        </>
     );
 }
