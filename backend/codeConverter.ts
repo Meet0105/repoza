@@ -63,7 +63,7 @@ ${content}
 Provide ONLY the converted code without explanations. Start directly with the code:`;
 
     const convertedCode = await generateText(prompt);
-    
+
     // Clean up markdown code blocks if present
     let cleanedCode = convertedCode
       .replace(/```[\w]*\n/g, '')
@@ -84,13 +84,13 @@ export async function fetchRepoFiles(
   githubToken?: string
 ): Promise<Array<{ path: string; content: string; type: string }>> {
   const files: Array<{ path: string; content: string; type: string }> = [];
-  
+
   try {
     const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
     const headers: any = {
       Accept: 'application/vnd.github.v3+json',
     };
-    
+
     if (githubToken) {
       headers.Authorization = `token ${githubToken}`;
     }
@@ -103,7 +103,7 @@ export async function fetchRepoFiles(
         // Only process code files
         const ext = item.name.split('.').pop()?.toLowerCase();
         const codeExtensions = ['ts', 'tsx', 'js', 'jsx', 'py', 'java', 'go', 'rs', 'cs', 'php', 'rb'];
-        
+
         if (codeExtensions.includes(ext || '')) {
           try {
             const fileResponse = await axios.get(item.download_url);
@@ -175,7 +175,7 @@ Provide ONLY the converted dependency file content:`;
 
 export function detectSourceLanguage(files: Array<{ path: string; type: string }>): string {
   const extensions = files.map(f => f.type);
-  
+
   if (extensions.includes('tsx') || extensions.includes('ts')) return 'TypeScript';
   if (extensions.includes('jsx') || extensions.includes('js')) return 'JavaScript';
   if (extensions.includes('py')) return 'Python';
@@ -185,6 +185,6 @@ export function detectSourceLanguage(files: Array<{ path: string; type: string }
   if (extensions.includes('cs')) return 'C#';
   if (extensions.includes('php')) return 'PHP';
   if (extensions.includes('rb')) return 'Ruby';
-  
+
   return 'Unknown';
 }
