@@ -78,6 +78,13 @@ export default function Navbar() {
             >
               Generator
             </button>
+            <button
+              onClick={() => router.push('/pricing')}
+              className={`text-sm font-medium transition-all duration-300 hover:text-yellow-400 ${router.pathname === '/pricing' ? 'text-yellow-400' : 'text-gray-300'
+                }`}
+            >
+              Pricing
+            </button>
             {session && (
               <>
                 <button
@@ -107,6 +114,17 @@ export default function Navbar() {
 
           {/* Right Section */}
           <div className="flex items-center gap-3">
+            {/* Upgrade to Pro Button - Show for logged in users */}
+            {session && (
+              <button
+                onClick={() => router.push('/pricing')}
+                className="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg gradient-ai text-white font-medium hover:shadow-glow-purple transition-all duration-300 hover-lift"
+              >
+                <span className="text-lg">👑</span>
+                <span>Upgrade</span>
+              </button>
+            )}
+            
             {/* Mobile Menu Button */}
             <button
               onClick={() => setShowMobileMenu(!showMobileMenu)}
@@ -266,6 +284,18 @@ export default function Navbar() {
                   }`}
               >
                 🎨 Generator
+              </button>
+              <button
+                onClick={() => {
+                  router.push('/pricing');
+                  setShowMobileMenu(false);
+                }}
+                className={`w-full text-left px-4 py-3 rounded-lg transition-all ${router.pathname === '/pricing'
+                  ? 'glass text-yellow-400'
+                  : 'text-gray-300 hover:glass-light'
+                  }`}
+              >
+                💎 Pricing
               </button>
               {session && (
                 <>
