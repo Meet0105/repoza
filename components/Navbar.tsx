@@ -120,7 +120,6 @@ export default function Navbar() {
                 onClick={() => router.push('/pricing')}
                 className="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg gradient-ai text-white font-medium hover:shadow-glow-purple transition-all duration-300 hover-lift"
               >
-                <span className="text-lg">👑</span>
                 <span>Upgrade</span>
               </button>
             )}
