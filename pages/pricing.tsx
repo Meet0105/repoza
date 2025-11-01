@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Check, Sparkles, Zap, Crown } from 'lucide-react';
 import { useSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
@@ -17,6 +17,31 @@ export default function PricingPage() {
   const router = useRouter();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [loading, setLoading] = useState(false);
+  const [subscriptionStatus, setSubscriptionStatus] = useState<any>(null);
+  const [loadingStatus, setLoadingStatus] = useState(true);
+
+  // Fetch subscription status on mount
+  useEffect(() => {
+    if (session) {
+      fetchSubscriptionStatus();
+    } else {
+      setLoadingStatus(false);
+    }
+  }, [session]);
+
+  const fetchSubscriptionStatus = async () => {
+    try {
+      const response = await fetch('/api/subscription/status');
+      const data = await response.json();
+      setSubscriptionStatus(data);
+    } catch (error) {
+      console.error('Error fetching subscription:', error);
+    } finally {
+      setLoadingStatus(false);
+    }
+  };
+
+  const isPro = subscriptionStatus?.isPro || false;
 
   const handleUpgrade = async () => {
     if (!session) {
@@ -172,8 +197,18 @@ export default function PricingPage() {
               <button
                 onClick={() => !session && signIn()}
                 className="w-full btn-outline mb-8"
+                disabled={!!(session && !isPro)}
               >
-                {session ? 'Current Plan' : 'Get Started'}
+                {session && !isPro ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <Check className="w-4 h-4" />
+                    Current Plan
+                  </span>
+                ) : session && isPro ? (
+                  'Previous Plan'
+                ) : (
+                  'Get Started'
+                )}
               </button>
 
               <div className="space-y-4">
@@ -218,20 +253,38 @@ export default function PricingPage() {
                 </p>
               </div>
 
-              <button
-                onClick={handleUpgrade}
-                disabled={loading}
-                className="w-full btn-ai mb-8 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? (
-                  <span>Processing...</span>
-                ) : (
-                  <>
-                    <Zap className="w-5 h-5" />
-                    <span>Upgrade to Pro</span>
-                  </>
-                )}
-              </button>
+              {isPro ? (
+                <div className="mb-8">
+                  <div className="w-full glass-light rounded-lg p-4 text-center">
+                    <div className="flex items-center justify-center gap-2 text-green-400 mb-2">
+                      <Crown className="w-5 h-5" />
+                      <span className="font-semibold">Current Plan</span>
+                    </div>
+                    <p className="text-gray-400 text-sm">You're enjoying all Pro features!</p>
+                  </div>
+                  <button
+                    onClick={() => router.push('/subscription')}
+                    className="w-full btn-outline mt-4"
+                  >
+                    Manage Subscription
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={handleUpgrade}
+                  disabled={loading || loadingStatus}
+                  className="w-full btn-ai mb-8 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? (
+                    <span>Processing...</span>
+                  ) : (
+                    <>
+                      <Zap className="w-5 h-5" />
+                      <span>Upgrade to Pro</span>
+                    </>
+                  )}
+                </button>
+              )}
 
               <div className="space-y-4">
                 <Feature text="Unlimited searches" highlight />
