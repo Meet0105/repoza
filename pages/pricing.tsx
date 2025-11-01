@@ -3,14 +3,6 @@ import { Check, Sparkles, Zap, Crown } from 'lucide-react';
 import { useSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
-import Script from 'next/script';
-
-// Declare Razorpay type
-declare global {
-  interface Window {
-    Razorpay: any;
-  }
-}
 
 export default function PricingPage() {
   const { data: session } = useSession();
@@ -51,7 +43,7 @@ export default function PricingPage() {
 
     setLoading(true);
     try {
-      // Create subscription on backend
+      // Create Stripe checkout session
       const response = await fetch('/api/subscription/create-checkout', {
         method: 'POST',
         headers: {
@@ -64,63 +56,14 @@ export default function PricingPage() {
 
       const data = await response.json();
 
-      if (!data.subscriptionId) {
-        alert('Failed to create subscription');
+      if (!data.url) {
+        alert('Failed to create checkout session');
         setLoading(false);
         return;
       }
 
-      // Open Razorpay checkout
-      const options = {
-        key: data.key,
-        subscription_id: data.subscriptionId,
-        name: 'Repoza',
-        description: `Repoza Pro - ${billingCycle === 'monthly' ? 'Monthly' : 'Yearly'} Subscription`,
-        image: '/logo.png', // Add your logo
-        handler: async function (response: any) {
-          // Payment successful, verify on backend
-          try {
-            const verifyResponse = await fetch('/api/subscription/verify-payment', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_subscription_id: response.razorpay_subscription_id,
-                razorpay_signature: response.razorpay_signature,
-              }),
-            });
-
-            const verifyData = await verifyResponse.json();
-
-            if (verifyData.success) {
-              // Redirect to success page
-              router.push('/subscription/success');
-            } else {
-              alert('Payment verification failed');
-            }
-          } catch (error) {
-            console.error('Error verifying payment:', error);
-            alert('Payment verification failed');
-          }
-        },
-        prefill: {
-          email: session.user?.email || '',
-          name: session.user?.name || '',
-        },
-        theme: {
-          color: '#06b6d4', // Cyan color
-        },
-        modal: {
-          ondismiss: function () {
-            setLoading(false);
-          },
-        },
-      };
-
-      const rzp = new window.Razorpay(options);
-      rzp.open();
+      // Redirect to Stripe checkout
+      window.location.href = data.url;
     } catch (error) {
       console.error('Error creating checkout:', error);
       alert('An error occurred. Please try again.');
@@ -134,9 +77,6 @@ export default function PricingPage() {
 
   return (
     <>
-      {/* Load Razorpay script */}
-      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
-      
       <Navbar />
       <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 pt-20">
         <div className="max-w-7xl mx-auto px-4 py-16">
@@ -305,12 +245,10 @@ export default function PricingPage() {
 
           {/* Payment Methods */}
           <div className="mt-12 text-center">
-            <p className="text-gray-400 mb-4">Secure payments powered by Razorpay</p>
+            <p className="text-gray-400 mb-4">Secure payments powered by Stripe</p>
             <div className="flex justify-center items-center gap-6 flex-wrap">
-              <span className="text-gray-500">💳 Cards</span>
-              <span className="text-gray-500">📱 UPI</span>
-              <span className="text-gray-500">🏦 Net Banking</span>
-              <span className="text-gray-500">👛 Wallets</span>
+              <span className="text-gray-500">💳 Credit/Debit Cards</span>
+              <span className="text-gray-500">🔒 Secure Checkout</span>
             </div>
           </div>
 

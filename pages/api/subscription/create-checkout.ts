@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]';
-import { createSubscription, RAZORPAY_PLANS } from '../../../utils/razorpay';
+import { createCheckoutSession, STRIPE_PRICES } from '../../../utils/stripe';
 import { getUserSubscription } from '../../../utils/subscriptionChecker';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -24,30 +24,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'User already has active subscription' });
     }
 
-    // Get plan ID based on billing cycle
-    const planId = billingCycle === 'yearly' ? RAZORPAY_PLANS.yearly : RAZORPAY_PLANS.monthly;
+    // Get price ID based on billing cycle
+    const priceId = billingCycle === 'yearly' ? STRIPE_PRICES.yearly : STRIPE_PRICES.monthly;
 
-    if (!planId) {
+    if (!priceId) {
       return res.status(500).json({ error: 'Plan not configured' });
     }
 
-    // Create Razorpay subscription
-    const subscription = await createSubscription({
-      planId,
+    // Create Stripe checkout session
+    const checkoutSession = await createCheckoutSession({
       customerEmail: session.user.email,
-      customerName: session.user.name || undefined,
+      priceId,
+      successUrl: `${process.env.NEXTAUTH_URL}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancelUrl: `${process.env.NEXTAUTH_URL}/pricing`,
     });
 
-    // Return subscription details for frontend
+    // Return checkout URL
     res.status(200).json({
-      subscriptionId: subscription.id,
-      planId: subscription.plan_id,
-      status: subscription.status,
-      // Frontend will use these to open Razorpay checkout
-      key: process.env.RAZORPAY_KEY_ID,
+      url: checkoutSession.url,
     });
   } catch (error: any) {
-    console.error('Error creating subscription:', error);
-    res.status(500).json({ error: 'Failed to create subscription' });
+    console.error('Error creating checkout session:', error);
+    res.status(500).json({ error: 'Failed to create checkout session' });
   }
 }
