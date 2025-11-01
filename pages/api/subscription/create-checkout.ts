@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
-import { createCheckoutSession } from '../../../utils/stripe';
+import { createSubscription, RAZORPAY_PLANS } from '../../../utils/razorpay';
 import { getUserSubscription } from '../../../utils/subscriptionChecker';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { currency = 'USD', billingCycle = 'monthly' } = req.body;
+    const { billingCycle = 'monthly' } = req.body;
     
     const userSubscription = await getUserSubscription(session.user.email);
     
@@ -23,18 +23,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'User already has active subscription' });
     }
 
-    const checkoutSession = await createCheckoutSession({
-      customerId: userSubscription.stripeCustomerId,
+    // Get plan ID based on billing cycle
+    const planId = billingCycle === 'yearly' ? RAZORPAY_PLANS.yearly : RAZORPAY_PLANS.monthly;
+
+    if (!planId) {
+      return res.status(500).json({ error: 'Plan not configured' });
+    }
+
+    // Create Razorpay subscription
+    const subscription = await createSubscription({
+      planId,
       customerEmail: session.user.email,
-      currency: currency.toLowerCase(),
-      billingCycle,
-      successUrl: `${process.env.NEXTAUTH_URL}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancelUrl: `${process.env.NEXTAUTH_URL}/pricing`,
+      customerName: session.user.name || undefined,
     });
 
-    res.status(200).json({ url: checkoutSession.url });
+    // Return subscription details for frontend
+    res.status(200).json({
+      subscriptionId: subscription.id,
+      planId: subscription.plan_id,
+      status: subscription.status,
+      // Frontend will use these to open Razorpay checkout
+      key: process.env.RAZORPAY_KEY_ID,
+    });
   } catch (error: any) {
-    console.error('Error creating checkout session:', error);
-    res.status(500).json({ error: 'Failed to create checkout session' });
+    console.error('Error creating subscription:', error);
+    res.status(500).json({ error: 'Failed to create subscription' });
   }
 }

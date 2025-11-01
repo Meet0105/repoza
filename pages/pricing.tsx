@@ -1,69 +1,22 @@
-import { useState, useEffect } from 'react';
-import { Check, Sparkles, Zap, Crown, Globe } from 'lucide-react';
+import { useState } from 'react';
+import { Check, Sparkles, Zap, Crown } from 'lucide-react';
 import { useSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
+import Script from 'next/script';
 
-// Currency configurations with regional pricing
-const CURRENCIES = {
-  USD: { symbol: '$', price: 9.99, yearlyPrice: 99.99, name: 'US Dollar', region: 'United States', code: 'usd' },
-  EUR: { symbol: '€', price: 9.49, yearlyPrice: 94.99, name: 'Euro', region: 'Europe', code: 'eur' },
-  GBP: { symbol: '£', price: 7.99, yearlyPrice: 79.99, name: 'British Pound', region: 'United Kingdom', code: 'gbp' },
-  INR: { symbol: '₹', price: 799, yearlyPrice: 7999, name: 'Indian Rupee', region: 'India', code: 'inr' },
-  CAD: { symbol: 'C$', price: 13.49, yearlyPrice: 134.99, name: 'Canadian Dollar', region: 'Canada', code: 'cad' },
-  AUD: { symbol: 'A$', price: 14.99, yearlyPrice: 149.99, name: 'Australian Dollar', region: 'Australia', code: 'aud' },
-  JPY: { symbol: '¥', price: 1499, yearlyPrice: 14999, name: 'Japanese Yen', region: 'Japan', code: 'jpy' },
-  BRL: { symbol: 'R$', price: 49.99, yearlyPrice: 499.99, name: 'Brazilian Real', region: 'Brazil', code: 'brl' },
-  MXN: { symbol: 'MX$', price: 179.99, yearlyPrice: 1799.99, name: 'Mexican Peso', region: 'Mexico', code: 'mxn' },
-  SGD: { symbol: 'S$', price: 13.49, yearlyPrice: 134.99, name: 'Singapore Dollar', region: 'Singapore', code: 'sgd' },
-};
+// Declare Razorpay type
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
 export default function PricingPage() {
   const { data: session } = useSession();
   const router = useRouter();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
-  const [selectedCurrency, setSelectedCurrency] = useState<keyof typeof CURRENCIES>('USD');
-  const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false);
-
-  // Auto-detect user's region on mount
-  useEffect(() => {
-    detectUserRegion();
-  }, []);
-
-  const detectUserRegion = async () => {
-    try {
-      // Try to detect user's country from timezone
-      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      
-      // Simple timezone to currency mapping
-      if (timezone.includes('India') || timezone.includes('Kolkata') || timezone.includes('Mumbai') || timezone.includes('Delhi')) {
-        setSelectedCurrency('INR');
-      } else if (timezone.includes('London') || timezone.includes('UK')) {
-        setSelectedCurrency('GBP');
-      } else if (timezone.includes('Europe') || timezone.includes('Paris') || timezone.includes('Berlin') || timezone.includes('Madrid')) {
-        setSelectedCurrency('EUR');
-      } else if (timezone.includes('Tokyo') || timezone.includes('Japan')) {
-        setSelectedCurrency('JPY');
-      } else if (timezone.includes('Australia') || timezone.includes('Sydney') || timezone.includes('Melbourne')) {
-        setSelectedCurrency('AUD');
-      } else if (timezone.includes('Toronto') || timezone.includes('Vancouver') || timezone.includes('Canada')) {
-        setSelectedCurrency('CAD');
-      } else if (timezone.includes('Sao_Paulo') || timezone.includes('Brazil')) {
-        setSelectedCurrency('BRL');
-      } else if (timezone.includes('Mexico')) {
-        setSelectedCurrency('MXN');
-      } else if (timezone.includes('Singapore')) {
-        setSelectedCurrency('SGD');
-      }
-    } catch (error) {
-      console.log('Could not detect region, defaulting to USD');
-    }
-  };
-
-  const currentCurrency = CURRENCIES[selectedCurrency];
-  const monthlyPrice = currentCurrency.price;
-  const yearlyPrice = currentCurrency.yearlyPrice;
-  const yearlyMonthlyPrice = (yearlyPrice / 12).toFixed(2);
+  const [loading, setLoading] = useState(false);
 
   const handleUpgrade = async () => {
     if (!session) {
@@ -71,32 +24,94 @@ export default function PricingPage() {
       return;
     }
 
+    setLoading(true);
     try {
+      // Create subscription on backend
       const response = await fetch('/api/subscription/create-checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          currency: selectedCurrency,
-          billingCycle: billingCycle,
+          billingCycle,
         }),
       });
+
       const data = await response.json();
-      
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        alert('Failed to create checkout session');
+
+      if (!data.subscriptionId) {
+        alert('Failed to create subscription');
+        setLoading(false);
+        return;
       }
+
+      // Open Razorpay checkout
+      const options = {
+        key: data.key,
+        subscription_id: data.subscriptionId,
+        name: 'Repoza',
+        description: `Repoza Pro - ${billingCycle === 'monthly' ? 'Monthly' : 'Yearly'} Subscription`,
+        image: '/logo.png', // Add your logo
+        handler: async function (response: any) {
+          // Payment successful, verify on backend
+          try {
+            const verifyResponse = await fetch('/api/subscription/verify-payment', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_subscription_id: response.razorpay_subscription_id,
+                razorpay_signature: response.razorpay_signature,
+              }),
+            });
+
+            const verifyData = await verifyResponse.json();
+
+            if (verifyData.success) {
+              // Redirect to success page
+              router.push('/subscription/success');
+            } else {
+              alert('Payment verification failed');
+            }
+          } catch (error) {
+            console.error('Error verifying payment:', error);
+            alert('Payment verification failed');
+          }
+        },
+        prefill: {
+          email: session.user?.email || '',
+          name: session.user?.name || '',
+        },
+        theme: {
+          color: '#06b6d4', // Cyan color
+        },
+        modal: {
+          ondismiss: function () {
+            setLoading(false);
+          },
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
     } catch (error) {
       console.error('Error creating checkout:', error);
       alert('An error occurred. Please try again.');
+      setLoading(false);
     }
   };
 
+  const monthlyPrice = 799;
+  const yearlyPrice = 7999;
+  const yearlyMonthlyPrice = Math.round(yearlyPrice / 12);
+
   return (
     <>
+      {/* Load Razorpay script */}
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
+      
       <Navbar />
       <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 pt-20">
         <div className="max-w-7xl mx-auto px-4 py-16">
@@ -108,48 +123,6 @@ export default function PricingPage() {
             <p className="text-xl text-gray-300 mb-8">
               Choose the plan that fits your needs
             </p>
-
-            {/* Currency Selector */}
-            <div className="flex justify-center items-center gap-3 mb-6">
-              <Globe className="w-5 h-5 text-gray-400" />
-              <span className="text-gray-400">Select your region:</span>
-              <div className="relative">
-                <button
-                  onClick={() => setShowCurrencyDropdown(!showCurrencyDropdown)}
-                  className="glass px-4 py-2 rounded-lg text-white font-medium flex items-center gap-2 hover:glass-light transition-all"
-                >
-                  <span>{currentCurrency.symbol}</span>
-                  <span>{selectedCurrency}</span>
-                  <span className="text-gray-400 text-sm">- {currentCurrency.region}</span>
-                  <svg className={`w-4 h-4 transition-transform ${showCurrencyDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                
-                {showCurrencyDropdown && (
-                  <div className="absolute top-full mt-2 left-0 right-0 min-w-[300px] glass rounded-lg overflow-hidden z-50 max-h-96 overflow-y-auto shadow-2xl">
-                    {Object.entries(CURRENCIES).map(([code, info]) => (
-                      <button
-                        key={code}
-                        onClick={() => {
-                          setSelectedCurrency(code as keyof typeof CURRENCIES);
-                          setShowCurrencyDropdown(false);
-                        }}
-                        className={`w-full px-4 py-3 text-left hover:bg-white/10 transition-all flex items-center justify-between ${
-                          selectedCurrency === code ? 'bg-white/10 text-cyan-400' : 'text-white'
-                        }`}
-                      >
-                        <span className="flex items-center gap-2">
-                          <span className="font-semibold">{info.symbol}</span>
-                          <span>{code}</span>
-                        </span>
-                        <span className="text-gray-400 text-sm">{info.region}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
 
             {/* Billing Toggle */}
             <div className="inline-flex items-center gap-3 glass rounded-full p-1">
@@ -192,7 +165,7 @@ export default function PricingPage() {
               </div>
 
               <div className="mb-8">
-                <div className="text-4xl font-bold text-white mb-2">$0</div>
+                <div className="text-4xl font-bold text-white mb-2">₹0</div>
                 <p className="text-gray-400">Forever free</p>
               </div>
 
@@ -236,26 +209,28 @@ export default function PricingPage() {
 
               <div className="mb-8">
                 <div className="text-4xl font-bold gradient-text-primary mb-2">
-                  {currentCurrency.symbol}{billingCycle === 'monthly' ? monthlyPrice.toLocaleString() : yearlyMonthlyPrice}
+                  ₹{billingCycle === 'monthly' ? monthlyPrice : yearlyMonthlyPrice}
                   <span className="text-lg text-gray-400">/month</span>
                 </div>
                 <p className="text-gray-400">
-                  {billingCycle === 'yearly' && `Billed yearly (${currentCurrency.symbol}${yearlyPrice.toLocaleString()}/year)`}
+                  {billingCycle === 'yearly' && `Billed yearly (₹${yearlyPrice.toLocaleString()}/year)`}
                   {billingCycle === 'monthly' && 'Billed monthly'}
                 </p>
-                {selectedCurrency !== 'USD' && (
-                  <p className="text-gray-500 text-sm mt-1">
-                    ≈ ${CURRENCIES.USD.price} USD/month
-                  </p>
-                )}
               </div>
 
               <button
                 onClick={handleUpgrade}
-                className="w-full btn-ai mb-8"
+                disabled={loading}
+                className="w-full btn-ai mb-8 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Zap className="w-5 h-5" />
-                <span>Upgrade to Pro</span>
+                {loading ? (
+                  <span>Processing...</span>
+                ) : (
+                  <>
+                    <Zap className="w-5 h-5" />
+                    <span>Upgrade to Pro</span>
+                  </>
+                )}
               </button>
 
               <div className="space-y-4">
@@ -275,6 +250,17 @@ export default function PricingPage() {
             </div>
           </div>
 
+          {/* Payment Methods */}
+          <div className="mt-12 text-center">
+            <p className="text-gray-400 mb-4">Secure payments powered by Razorpay</p>
+            <div className="flex justify-center items-center gap-6 flex-wrap">
+              <span className="text-gray-500">💳 Cards</span>
+              <span className="text-gray-500">📱 UPI</span>
+              <span className="text-gray-500">🏦 Net Banking</span>
+              <span className="text-gray-500">👛 Wallets</span>
+            </div>
+          </div>
+
           {/* FAQ Section */}
           <div className="mt-20 max-w-3xl mx-auto">
             <h2 className="text-3xl font-bold text-center gradient-text-primary mb-12">
@@ -283,11 +269,11 @@ export default function PricingPage() {
             <div className="space-y-6">
               <FAQItem
                 question="Can I cancel anytime?"
-                answer="Yes! You can cancel your subscription at any time. You'll continue to have Pro access until the end of your billing period."
+                answer="Yes! You can cancel your subscription at any time from your subscription page. You'll continue to have Pro access until the end of your billing period."
               />
               <FAQItem
                 question="What payment methods do you accept?"
-                answer="We accept all major credit cards (Visa, Mastercard, American Express) through Stripe, our secure payment processor."
+                answer="We accept all major payment methods through Razorpay including Credit/Debit Cards, UPI (Google Pay, PhonePe, Paytm), Net Banking, and Wallets."
               />
               <FAQItem
                 question="Do you offer refunds?"
@@ -296,6 +282,10 @@ export default function PricingPage() {
               <FAQItem
                 question="Can I upgrade from Free to Pro anytime?"
                 answer="Absolutely! You can upgrade to Pro at any time and start enjoying premium features immediately."
+              />
+              <FAQItem
+                question="Is my payment information secure?"
+                answer="Yes! All payments are processed securely through Razorpay, which is PCI DSS compliant. We never store your card details."
               />
             </div>
           </div>

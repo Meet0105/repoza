@@ -44,8 +44,8 @@ export async function getUserSubscription(email: string) {
     return {
       plan: user?.subscription?.plan || 'free',
       status: user?.subscription?.status || 'inactive',
-      stripeCustomerId: user?.subscription?.stripeCustomerId,
-      stripeSubscriptionId: user?.subscription?.stripeSubscriptionId,
+      razorpaySubscriptionId: user?.subscription?.razorpaySubscriptionId,
+      razorpayPaymentId: user?.subscription?.razorpayPaymentId,
       currentPeriodEnd: user?.subscription?.currentPeriodEnd
     };
   } catch (error) {
