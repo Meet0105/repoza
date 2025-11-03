@@ -8,7 +8,84 @@ const REPOZA_KNOWLEDGE_BASE = `
 Repoza is an intelligent platform that helps developers discover, analyze, and work with GitHub repositories using AI. 
 It combines powerful search, code generation, learning paths, and deployment tools into one seamless experience.
 
-## 🌟 CORE FEATURES (12 MAJOR FEATURES):
+## 💎 SUBSCRIPTION PLANS:
+
+### FREE PLAN (Always Free):
+**What you get:**
+- ✅ Smart Search & Discovery (10 searches/day)
+- ✅ Boilerplate Generator (3 per day)
+- ✅ Dependency Analyzer (5 per day)
+- ✅ Code Explanation (unlimited)
+- ✅ AI Chatbot (unlimited)
+- ✅ Collections (up to 3)
+- ✅ Setup Guide Generator (3 per day)
+- ✅ History (7 days)
+
+**Perfect for:**
+- Students learning to code
+- Hobbyists exploring projects
+- Trying out Repoza features
+
+### PRO PLAN ($9.99/month or $99.99/year):
+**Everything in Free, plus:**
+- ✅ **Unlimited Searches** - No daily limits
+- ✅ **Code Converter** - Convert between languages
+- ✅ **Learning Path Generator** - AI-powered learning journeys
+- ✅ **Repository Q&A** - Chat with any repository
+- ✅ **Live Preview** - StackBlitz integration
+- ✅ **One-Click Deploy** - Deploy to Vercel instantly
+- ✅ **Unlimited Boilerplates** - Generate as many as you need
+- ✅ **Unlimited Collections** - Organize without limits
+- ✅ **30-Day History** - Extended activity tracking
+- ✅ **Priority Support** - Get help faster
+
+**Perfect for:**
+- Professional developers
+- Teams building projects
+- Serious learners
+- Anyone who wants full access
+
+### MULTI-CURRENCY SUPPORT:
+We support 10 currencies for global accessibility:
+- 🇺🇸 **USD:** $9.99/month, $99.99/year
+- 🇪🇺 **EUR:** €8.99/month, €89.99/year
+- 🇬🇧 **GBP:** £7.99/month, £79.99/year
+- 🇮🇳 **INR:** ₹799/month, ₹7,999/year
+- 🇨🇦 **CAD:** C$12.99/month, C$129.99/year
+- 🇦🇺 **AUD:** A$14.99/month, A$149.99/year
+- 🇸🇬 **SGD:** S$13.99/month, S$139.99/year
+- 🇯🇵 **JPY:** ¥1,299/month, ¥12,999/year
+- 🇧🇷 **BRL:** R$49.99/month, R$499.99/year
+- 🇲🇽 **MXN:** MX$199/month, MX$1,999/year
+
+**Save ~17% with yearly billing!**
+
+### HOW TO UPGRADE:
+1. Go to **/pricing** page
+2. Select your currency from dropdown
+3. Choose Monthly or Yearly billing
+4. Click "Upgrade to Pro"
+5. Complete payment with Stripe
+6. Instant access to all Pro features!
+
+### MANAGE SUBSCRIPTION:
+- View current plan on /pricing page
+- Click "Manage Subscription" to:
+  - Update payment method
+  - Switch between monthly/yearly
+  - View invoice history
+  - Cancel subscription (keeps access until period ends)
+- Powered by Stripe for secure payments
+
+### PAYMENT FEATURES:
+- 🔒 **Secure:** Stripe-powered payments
+- 💳 **Easy:** Credit/debit cards accepted
+- 🌍 **Global:** 10 currencies supported
+- 🔄 **Flexible:** Cancel anytime
+- 📧 **Receipts:** Automatic email invoices
+- 🔐 **Safe:** No charges stored on our servers
+
+## 🌟 CORE FEATURES (15 MAJOR FEATURES):
 
 ### 1. 🔍 SMART SEARCH & DISCOVERY
 **What it does:** Search 10M+ GitHub repositories with AI-powered ranking
@@ -70,34 +147,42 @@ It combines powerful search, code generation, learning paths, and deployment too
 - "Python ML pipeline with FastAPI and PostgreSQL"
 - "React Native app with Firebase authentication"
 
-### 3. 📚 LEARNING PATHS (AI-Generated)
-**What it does:** Creates personalized learning journeys from beginner to expert
+### 3. 📚 LEARNING PATHS (PRO FEATURE 👑)
+**What it does:** Creates personalized learning journeys from beginner to expert using AI
 **Location:** /learn page
+**Requires:** Pro subscription
 **How to use:**
 1. Go to /learn
 2. Enter topic (e.g., "React", "Machine Learning", "DevOps")
-3. Select your current level: Beginner, Intermediate, Advanced, Expert
+3. Select your current level: Beginner, Intermediate, Advanced
 4. Click "Generate Learning Path"
-5. Get structured 4-level journey
-6. Each level has: Skills, Repos, Projects
+5. Get structured 4-level journey with AI-curated content
+6. Each level has: Skills, Repos, Projects, Estimated time
 7. Mark steps complete to track progress
+8. Save paths for later reference
 
 **What you get:**
-- 4 progressive levels
+- 4 progressive levels (Beginner → Intermediate → Advanced → Expert)
 - Curated GitHub repositories for each level
 - Skills to learn at each stage
-- Practice projects
+- Practice projects with descriptions
 - Progress tracking (percentage complete)
 - Estimated time per level
 - Clear learning objectives
+- What to learn from each repo
+- Saved learning paths history
 
 **Example Topics:**
-- Frontend: React, Vue, Angular, Svelte
-- Backend: Node.js, Python, Go, Java
-- Mobile: React Native, Flutter
-- AI/ML: TensorFlow, PyTorch, Scikit-learn
-- DevOps: Docker, Kubernetes, CI/CD
-- Blockchain: Solidity, Web3, Smart Contracts
+- Frontend: React, Vue, Angular, Svelte, Next.js
+- Backend: Node.js, Python, Go, Java, Rust
+- Mobile: React Native, Flutter, Swift
+- AI/ML: TensorFlow, PyTorch, Scikit-learn, LangChain
+- DevOps: Docker, Kubernetes, CI/CD, Terraform
+- Blockchain: Solidity, Web3, Smart Contracts, DeFi
+- Data Science: Pandas, NumPy, Data Visualization
+- Game Dev: Unity, Unreal Engine, Godot
+
+**Free users see:** Upgrade prompt explaining Pro benefits
 
 ### 4. 💾 COLLECTIONS (Save & Organize)
 **What it does:** Save and organize your favorite repositories
@@ -128,84 +213,130 @@ It combines powerful search, code generation, learning paths, and deployment too
 - "Interview Prep" - Algorithm repos
 - "Work Projects" - Reference materials
 
-### 5. 🚀 ONE-CLICK DEPLOYMENT
-**What it does:** Deploy repositories to Vercel instantly
-**Requires:** Login + Vercel account
+### 5. 🚀 ONE-CLICK DEPLOYMENT (PRO FEATURE 👑)
+**What it does:** Deploy repositories to Vercel instantly with zero configuration
+**Requires:** Pro subscription + GitHub login
 **How to use:**
 1. Go to any repo detail page
 2. Click "Deploy to Vercel" button
 3. Authorize Vercel (first time only)
-4. Deployment starts automatically
-5. Get live URL in minutes
+4. Repo is automatically created in your GitHub
+5. Deployment starts automatically
+6. Get live URL in minutes!
 
 **What can be deployed:**
 - Next.js applications
-- React applications
-- Static sites
+- React applications (Create React App, Vite)
+- Static sites (HTML/CSS/JS)
 - Node.js APIs
+- Vue, Svelte, Angular apps
 - Generated boilerplates
 - Any repo with package.json
 
+**Deployment Types:**
+1. **Existing Repo:** Deploy any GitHub repository
+2. **Generated Boilerplate:** Deploy your generated code
+
 **Features:**
 - Automatic build configuration
+- Framework auto-detection
 - Environment variable setup
 - Custom domain support
 - Instant preview URLs
 - Deployment history
 - One-click updates
+- Automatic HTTPS
+- CDN distribution
+- Serverless functions support
 
-### 6. 👁️ LIVE PREVIEW (StackBlitz)
-**What it does:** Preview and edit code in browser without cloning
+**How it works:**
+1. Repo is forked/created in your GitHub
+2. Connected to Vercel automatically
+3. Build settings configured
+4. Deployment triggered
+5. Live URL provided
+6. Continuous deployment enabled
+
+**Free users see:** "Upgrade to Deploy" button with Pro benefits
+
+### 6. 👁️ LIVE PREVIEW (PRO FEATURE 👑)
+**What it does:** Preview and edit code in browser without cloning using StackBlitz
+**Requires:** Pro subscription
 **How to use:**
 1. Go to repo detail page
 2. Click "Live Preview" button
-3. Code opens in StackBlitz
-4. Edit and run code instantly
-5. No installation needed!
+3. Repo is analyzed for framework compatibility
+4. Code opens in StackBlitz embedded IDE
+5. Edit and run code instantly in browser
+6. No installation or cloning needed!
 
 **Supported Frameworks:**
 - React, Vue, Angular
-- Svelte, Preact
+- Svelte, Preact, Solid
 - TypeScript, JavaScript
 - HTML/CSS/JS
 - Node.js projects
-- Vite, Webpack projects
+- Vite, Webpack, Parcel projects
+- Next.js, Nuxt, SvelteKit
 
 **Features:**
-- Full IDE in browser
-- Hot reload
-- Terminal access
-- Package installation
-- File editing
-- Instant preview
+- Full IDE in browser with VS Code-like interface
+- Hot module reload (instant updates)
+- Terminal access for commands
+- Package installation (npm/yarn)
+- File editing with syntax highlighting
+- Instant preview pane
 - Share preview links
+- Download modified code
+- No local setup required
 
-### 7. 🔄 CODE CONVERTER
-**What it does:** Convert code between programming languages using AI
+**How it works:**
+1. Framework is auto-detected
+2. Files are fetched from GitHub
+3. Project is created in StackBlitz
+4. Opens in embedded iframe
+5. Full development environment ready!
+
+**Free users see:** Upgrade modal explaining Live Preview benefits
+
+### 7. 🔄 CODE CONVERTER (PRO FEATURE 👑)
+**What it does:** Convert entire repositories between programming languages using AI
+**Requires:** Pro subscription
 **How to use:**
 1. Go to repo detail page
 2. Click "Convert Code" button
-3. Select source language
-4. Select target language
-5. Paste or select code
-6. AI converts the code
-7. Copy converted code
+3. Select target language (Python, Java, Go, Rust, PHP, Ruby, TypeScript, etc.)
+4. Choose target framework (optional)
+5. Select scope: Full repo or specific files
+6. AI converts all code files
+7. Download as ZIP with converted code
 
-**Supported Languages:**
-- JavaScript ↔ TypeScript
-- Python ↔ JavaScript
-- Java ↔ Kotlin
-- Go ↔ Rust
-- PHP ↔ Node.js
+**Supported Conversions:**
+- JavaScript/TypeScript → Python, Java, Go, Rust, PHP, Ruby
+- Python → JavaScript, TypeScript, Java, Go
+- Java → Kotlin, Go, Rust
+- Go → Rust, Java
+- PHP → Node.js, Python
 - And many more combinations!
 
+**What you get:**
+- All code files converted
+- Dependencies converted (package.json → requirements.txt, etc.)
+- Folder structure preserved
+- README with conversion notes
+- Success/failure report
+- Download as ZIP
+
 **Features:**
-- Syntax highlighting
-- Copy to clipboard
-- Preserves logic and structure
-- Handles complex code
+- Batch conversion (up to 50 files)
+- Framework-aware conversion
+- Dependency translation
+- Syntax preservation
+- Logic maintained
 - Comments preserved
 - Error handling
+
+**Free users see:** Upgrade prompt with Pro benefits
 
 ### 8. 📦 DEPENDENCY ANALYZER
 **What it does:** Analyze repository dependencies for health and security
@@ -258,30 +389,49 @@ It combines powerful search, code generation, learning paths, and deployment too
 - Common issues & solutions
 - OS-specific commands
 
-### 10. 💬 REPO Q&A (Chat with Repos)
-**What it does:** Ask questions about any repository using AI
+### 10. 💬 REPO Q&A (PRO FEATURE 👑)
+**What it does:** Ask questions about any repository using AI-powered semantic search
+**Requires:** Pro subscription
 **How to use:**
 1. Go to repo detail page
-2. Click "Ask Questions" or "Index Repo"
-3. Index the repo (first time only)
-4. Ask questions about the code
-5. Get AI-powered answers
-6. Understand repo structure
+2. Click "Ask Questions" or "Index Repository"
+3. Index the repo (first time only - takes 1-2 minutes)
+4. Ask questions about the code in natural language
+5. Get AI-powered answers with source references
+6. Understand repo structure and implementation
 
 **Example Questions:**
-- "What does this repo do?"
-- "How do I set up authentication?"
-- "Explain the main.js file"
-- "What dependencies does this use?"
+- "What does this repo do and what problem does it solve?"
+- "How do I set up authentication in this project?"
+- "Explain the main.js file and its purpose"
+- "What dependencies does this use and why?"
 - "How is the database configured?"
 - "What API endpoints are available?"
+- "Where is the user authentication logic?"
+- "How does the payment system work?"
+- "What testing framework is used?"
+- "Explain the folder structure"
 
 **Features:**
-- Context-aware answers
-- Code explanations
+- Context-aware answers using vector embeddings
+- Code explanations with line references
 - File-specific questions
 - Architecture understanding
 - Best practices suggestions
+- Source file references
+- Relevance scoring
+- Chat history within session
+- Suggested questions
+
+**How it works:**
+1. Repo is indexed using Pinecone vector database
+2. Code is chunked and embedded
+3. Your question is converted to embedding
+4. Most relevant code chunks are retrieved
+5. AI generates answer using context
+6. Sources are cited
+
+**Free users see:** Inline upgrade prompt with feature explanation
 
 ### 11. ⚙️ ADMIN PANEL
 **What it does:** Configure API keys, ranking weights, and platform settings
@@ -336,11 +486,17 @@ It combines powerful search, code generation, learning paths, and deployment too
 ### Main Pages:
 - **/ (Home):** Search repositories, paste GitHub URLs
 - **/generator:** Generate boilerplates
-- **/learn:** Create learning paths
+- **/learn:** Create learning paths (Pro)
 - **/collections:** Manage saved repos
 - **/history:** View your activity
-- **/admin:** Platform settings
+- **/pricing:** View plans and upgrade to Pro
+- **/admin:** Platform settings (Admin only)
 - **/repo/[owner]/[repo]:** Repository details
+
+### Pricing & Subscription:
+- **/pricing:** Compare Free vs Pro plans, upgrade, manage subscription
+- **/subscription/success:** Payment success confirmation
+- **Stripe Customer Portal:** Manage billing, update payment method, cancel subscription
 
 ### Repository Detail Page Features:
 When you click on any repo, you get:
@@ -365,20 +521,126 @@ When you click on any repo, you get:
 - Session management
 - Sign out anytime
 
-### Protected Features (Require Login):
-- Collections
-- Deployment
-- History
-- Some admin features
-
-### Public Features (No Login):
-- Search repositories
-- Generate boilerplates
-- Create learning paths
+### Free Features (No Login Required):
+- Search repositories (10/day)
+- Generate boilerplates (3/day)
 - View repo details
-- Live preview
-- Code converter
-- Dependency analyzer
+- Dependency analyzer (5/day)
+- Code explanation
+- AI Chatbot
+
+### Features Requiring Login:
+- Collections
+- History
+- Subscription management
+- Deployment (Pro)
+- Learning paths (Pro)
+- Repo Q&A (Pro)
+- Live preview (Pro)
+- Code converter (Pro)
+
+### Pro Features (Require Pro Subscription):
+- 🔄 Code Converter
+- 📚 Learning Path Generator
+- 💬 Repository Q&A
+- 👁️ Live Preview
+- 🚀 One-Click Deploy
+- ♾️ Unlimited searches, boilerplates, collections
+- 📊 Extended history (30 days)
+
+## 💳 SUBSCRIPTION & BILLING FAQ:
+
+### How do I upgrade to Pro?
+1. Go to /pricing page
+2. Select your currency
+3. Choose monthly or yearly
+4. Click "Upgrade to Pro"
+5. Complete Stripe checkout
+6. Instant access!
+
+### What payment methods are accepted?
+- Credit cards (Visa, Mastercard, Amex, Discover)
+- Debit cards
+- Powered by Stripe (secure & trusted)
+- No PayPal or crypto currently
+
+### Can I cancel anytime?
+Yes! Cancel anytime from:
+1. Go to /pricing
+2. Click "Manage Subscription"
+3. Click "Cancel subscription"
+4. Choose "Cancel at period end"
+5. Keep access until billing period ends
+6. No refunds for partial months
+
+### What happens when I cancel?
+- Subscription continues until period end
+- You keep Pro access until then
+- After period ends, downgrade to Free
+- Your data is preserved
+- Can resubscribe anytime
+
+### Can I switch between monthly and yearly?
+Yes! In Customer Portal:
+1. Click "Manage Subscription"
+2. Click "Update plan"
+3. Select monthly or yearly
+4. Prorated charges applied
+5. Changes take effect immediately
+
+### Can I change my currency?
+- Currency is set at signup
+- To change: Cancel current subscription
+- Wait for period to end
+- Subscribe again with new currency
+
+### Do you offer refunds?
+- No refunds for partial months
+- Cancel anytime to stop future charges
+- Access continues until period ends
+- Contact support for special cases
+
+### Is my payment information secure?
+- Yes! We use Stripe for payments
+- We never store card details
+- PCI DSS compliant
+- Industry-standard encryption
+- Trusted by millions worldwide
+
+### What if my payment fails?
+- You'll receive email notification
+- Update payment method in Customer Portal
+- Grace period provided
+- Access continues during grace period
+- Subscription cancelled if not resolved
+
+### Can I get an invoice?
+Yes! Invoices are:
+- Emailed automatically after payment
+- Available in Customer Portal
+- Downloadable as PDF
+- Include all payment details
+- For business expense reports
+
+### Do you offer team/business plans?
+- Currently: Individual plans only
+- Team plans: Coming soon!
+- Contact us for bulk pricing
+- Enterprise options available
+
+### What happens to my data if I downgrade?
+- All data is preserved
+- Collections limited to 3 (oldest kept)
+- History limited to 7 days
+- Pro features become locked
+- Can upgrade anytime to restore access
+
+### Can I try Pro before buying?
+- No free trial currently
+- But: Cancel anytime!
+- Try for a month risk-free
+- Full refund if cancelled within 24 hours
+- Contact support if not satisfied
 
 ## 🎓 COMMON WORKFLOWS:
 
@@ -465,6 +727,40 @@ When you click on any repo, you get:
 - Clear browser cache
 - Try different browser
 - Check network tab for errors
+
+### Pro Features Showing Upgrade Prompt:
+**Problem:** Paid for Pro but still seeing upgrade prompts
+**Solutions:**
+- Refresh the page (Ctrl+F5)
+- Sign out and sign in again
+- Check /pricing page for subscription status
+- Verify payment succeeded in Stripe
+- Check email for payment confirmation
+- Wait 1-2 minutes for webhook to process
+- Contact support if issue persists
+
+### Payment Failed:
+**Problem:** Payment not going through
+**Solutions:**
+- Check card details are correct
+- Ensure sufficient funds
+- Try different card
+- Check if card supports international payments
+- Disable VPN if using one
+- Try different browser
+- Contact your bank
+- Contact our support
+
+### Subscription Not Showing:
+**Problem:** Paid but subscription not active
+**Solutions:**
+- Check email for payment confirmation
+- Go to /pricing to verify status
+- Wait 2-3 minutes for processing
+- Check Stripe dashboard for payment
+- Refresh page (Ctrl+F5)
+- Sign out and sign in
+- Contact support with payment details
 
 ### Live Preview Not Loading:
 **Problem:** StackBlitz preview fails
@@ -591,23 +887,29 @@ When you click on any repo, you get:
 
 ## 📊 PLATFORM STATS:
 - 10M+ GitHub repositories indexed
-- 12 major features
+- 15 major features
 - 50+ programming languages supported
+- 10 currencies supported globally
 - AI-powered search and generation
 - Real-time updates
 - Cloud deployment integration
+- Secure Stripe payments
 - Active development and updates
 
 ## 🔮 WHAT MAKES REPOZA SPECIAL:
 
-1. **AI-Powered Everything:** Search, generation, learning paths all use AI
+1. **AI-Powered Everything:** Search, generation, learning paths, Q&A all use AI
 2. **All-in-One Platform:** Search, learn, build, deploy in one place
 3. **Developer-Focused:** Built by developers, for developers
 4. **Time-Saving:** Find repos 10x faster with AI ranking
 5. **Learning-Oriented:** Structured learning paths for any technology
 6. **Production-Ready:** Deploy to Vercel with one click
-7. **Open & Transparent:** See how repos are ranked
-8. **Constantly Improving:** Regular updates and new features
+7. **Global Access:** 10 currencies, worldwide availability
+8. **Flexible Pricing:** Free forever plan + affordable Pro
+9. **Feature Gates:** Try before you buy, upgrade when ready
+10. **Secure Payments:** Stripe-powered, PCI compliant
+11. **No Lock-In:** Cancel anytime, data preserved
+12. **Constantly Improving:** Regular updates and new features
 
 ## 🎉 SUCCESS STORIES:
 
