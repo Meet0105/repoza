@@ -1,8 +1,22 @@
 import { useState, useEffect } from 'react';
-import { Check, Sparkles, Zap, Crown } from 'lucide-react';
+import { Check, Sparkles, Zap, Crown, Globe } from 'lucide-react';
 import { useSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
+
+// Currency configurations with regional pricing
+const CURRENCIES = {
+  USD: { symbol: '$', price: 9.99, yearlyPrice: 99.99, name: 'US Dollar', region: 'United States', code: 'usd' },
+  EUR: { symbol: '€', price: 9.49, yearlyPrice: 94.99, name: 'Euro', region: 'Europe', code: 'eur' },
+  GBP: { symbol: '£', price: 7.99, yearlyPrice: 79.99, name: 'British Pound', region: 'United Kingdom', code: 'gbp' },
+  INR: { symbol: '₹', price: 799, yearlyPrice: 7999, name: 'Indian Rupee', region: 'India', code: 'inr' },
+  CAD: { symbol: 'C$', price: 13.49, yearlyPrice: 134.99, name: 'Canadian Dollar', region: 'Canada', code: 'cad' },
+  AUD: { symbol: 'A$', price: 14.99, yearlyPrice: 149.99, name: 'Australian Dollar', region: 'Australia', code: 'aud' },
+  JPY: { symbol: '¥', price: 1499, yearlyPrice: 14999, name: 'Japanese Yen', region: 'Japan', code: 'jpy' },
+  BRL: { symbol: 'R$', price: 49.99, yearlyPrice: 499.99, name: 'Brazilian Real', region: 'Brazil', code: 'brl' },
+  MXN: { symbol: 'MX$', price: 179.99, yearlyPrice: 1799.99, name: 'Mexican Peso', region: 'Mexico', code: 'mxn' },
+  SGD: { symbol: 'S$', price: 13.49, yearlyPrice: 134.99, name: 'Singapore Dollar', region: 'Singapore', code: 'sgd' },
+};
 
 export default function PricingPage() {
   const { data: session } = useSession();
@@ -11,6 +25,8 @@ export default function PricingPage() {
   const [loading, setLoading] = useState(false);
   const [subscriptionStatus, setSubscriptionStatus] = useState<any>(null);
   const [loadingStatus, setLoadingStatus] = useState(true);
+  const [selectedCurrency, setSelectedCurrency] = useState<keyof typeof CURRENCIES>('USD');
+  const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false);
 
   // Fetch subscription status on mount
   useEffect(() => {
@@ -20,6 +36,41 @@ export default function PricingPage() {
       setLoadingStatus(false);
     }
   }, [session]);
+
+  // Auto-detect user's region on mount
+  useEffect(() => {
+    detectUserRegion();
+  }, []);
+
+  const detectUserRegion = async () => {
+    try {
+      // Try to detect user's country from timezone
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      
+      // Simple timezone to currency mapping
+      if (timezone.includes('India') || timezone.includes('Kolkata') || timezone.includes('Mumbai') || timezone.includes('Delhi')) {
+        setSelectedCurrency('INR');
+      } else if (timezone.includes('London') || timezone.includes('UK')) {
+        setSelectedCurrency('GBP');
+      } else if (timezone.includes('Europe') || timezone.includes('Paris') || timezone.includes('Berlin') || timezone.includes('Madrid')) {
+        setSelectedCurrency('EUR');
+      } else if (timezone.includes('Tokyo') || timezone.includes('Japan')) {
+        setSelectedCurrency('JPY');
+      } else if (timezone.includes('Australia') || timezone.includes('Sydney') || timezone.includes('Melbourne')) {
+        setSelectedCurrency('AUD');
+      } else if (timezone.includes('Toronto') || timezone.includes('Vancouver') || timezone.includes('Canada')) {
+        setSelectedCurrency('CAD');
+      } else if (timezone.includes('Sao_Paulo') || timezone.includes('Brazil')) {
+        setSelectedCurrency('BRL');
+      } else if (timezone.includes('Mexico')) {
+        setSelectedCurrency('MXN');
+      } else if (timezone.includes('Singapore')) {
+        setSelectedCurrency('SGD');
+      }
+    } catch (error) {
+      console.log('Could not detect region, defaulting to USD');
+    }
+  };
 
   const fetchSubscriptionStatus = async () => {
     try {
@@ -34,6 +85,11 @@ export default function PricingPage() {
   };
 
   const isPro = subscriptionStatus?.isPro || false;
+
+  const currentCurrency = CURRENCIES[selectedCurrency];
+  const monthlyPrice = currentCurrency.price;
+  const yearlyPrice = currentCurrency.yearlyPrice;
+  const yearlyMonthlyPrice = (yearlyPrice / 12).toFixed(2);
 
   const handleUpgrade = async () => {
     if (!session) {
@@ -51,6 +107,7 @@ export default function PricingPage() {
         },
         body: JSON.stringify({
           billingCycle,
+          currency: selectedCurrency,
         }),
       });
 
@@ -71,10 +128,6 @@ export default function PricingPage() {
     }
   };
 
-  const monthlyPrice = 799;
-  const yearlyPrice = 7999;
-  const yearlyMonthlyPrice = Math.round(yearlyPrice / 12);
-
   return (
     <>
       <Navbar />
@@ -88,6 +141,48 @@ export default function PricingPage() {
             <p className="text-xl text-gray-300 mb-8">
               Choose the plan that fits your needs
             </p>
+
+            {/* Currency Selector */}
+            <div className="flex justify-center items-center gap-3 mb-6">
+              <Globe className="w-5 h-5 text-gray-400" />
+              <span className="text-gray-400">Select your region:</span>
+              <div className="relative">
+                <button
+                  onClick={() => setShowCurrencyDropdown(!showCurrencyDropdown)}
+                  className="glass px-4 py-2 rounded-lg text-white font-medium flex items-center gap-2 hover:glass-light transition-all"
+                >
+                  <span>{currentCurrency.symbol}</span>
+                  <span>{selectedCurrency}</span>
+                  <span className="text-gray-400 text-sm">- {currentCurrency.region}</span>
+                  <svg className={`w-4 h-4 transition-transform ${showCurrencyDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {showCurrencyDropdown && (
+                  <div className="absolute top-full mt-2 left-0 right-0 min-w-[300px] glass rounded-lg overflow-hidden z-50 max-h-96 overflow-y-auto shadow-2xl">
+                    {Object.entries(CURRENCIES).map(([code, info]) => (
+                      <button
+                        key={code}
+                        onClick={() => {
+                          setSelectedCurrency(code as keyof typeof CURRENCIES);
+                          setShowCurrencyDropdown(false);
+                        }}
+                        className={`w-full px-4 py-3 text-left hover:bg-white/10 transition-all flex items-center justify-between ${
+                          selectedCurrency === code ? 'bg-white/10 text-cyan-400' : 'text-white'
+                        }`}
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="font-semibold">{info.symbol}</span>
+                          <span>{code}</span>
+                        </span>
+                        <span className="text-gray-400 text-sm">{info.region}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
 
             {/* Billing Toggle */}
             <div className="inline-flex items-center gap-3 glass rounded-full p-1">
@@ -184,13 +279,18 @@ export default function PricingPage() {
 
               <div className="mb-8">
                 <div className="text-4xl font-bold gradient-text-primary mb-2">
-                  ₹{billingCycle === 'monthly' ? monthlyPrice : yearlyMonthlyPrice}
+                  {currentCurrency.symbol}{billingCycle === 'monthly' ? monthlyPrice.toLocaleString() : yearlyMonthlyPrice}
                   <span className="text-lg text-gray-400">/month</span>
                 </div>
                 <p className="text-gray-400">
-                  {billingCycle === 'yearly' && `Billed yearly (₹${yearlyPrice.toLocaleString()}/year)`}
+                  {billingCycle === 'yearly' && `Billed yearly (${currentCurrency.symbol}${yearlyPrice.toLocaleString()}/year)`}
                   {billingCycle === 'monthly' && 'Billed monthly'}
                 </p>
+                {selectedCurrency !== 'USD' && (
+                  <p className="text-gray-500 text-sm mt-1">
+                    ≈ ${CURRENCIES.USD.price} USD/month
+                  </p>
+                )}
               </div>
 
               {isPro ? (

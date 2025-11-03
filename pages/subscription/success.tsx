@@ -102,7 +102,7 @@ export default function SubscriptionSuccess() {
                     <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-cyan-400" />
                   </div>
                 </Link>
-                
+
                 <Link href="/learn" className="block p-4 glass-light rounded-lg hover:glass transition-all group">
                   <div className="flex items-center justify-between">
                     <div>
@@ -112,7 +112,7 @@ export default function SubscriptionSuccess() {
                     <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-cyan-400" />
                   </div>
                 </Link>
-                
+
                 <Link href="/generator" className="block p-4 glass-light rounded-lg hover:glass transition-all group">
                   <div className="flex items-center justify-between">
                     <div>

@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { billingCycle = 'monthly' } = req.body;
+    const { billingCycle = 'monthly', currency = 'INR' } = req.body;
     
     const userSubscription = await getUserSubscription(session.user.email);
     
@@ -24,8 +24,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'User already has active subscription' });
     }
 
-    // Get price ID based on billing cycle
-    const priceId = billingCycle === 'yearly' ? STRIPE_PRICES.yearly : STRIPE_PRICES.monthly;
+    // Get price ID based on currency and billing cycle
+    const currencyPrices = STRIPE_PRICES[currency.toUpperCase()];
+    const priceId = currencyPrices 
+      ? (billingCycle === 'yearly' ? currencyPrices.yearly : currencyPrices.monthly)
+      : (billingCycle === 'yearly' ? STRIPE_PRICES.INR.yearly : STRIPE_PRICES.INR.monthly); // Fallback to INR
 
     // Better error message if price not configured
     if (!priceId) {

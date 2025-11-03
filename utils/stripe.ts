@@ -6,10 +6,48 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export default stripe;
 
-// Price IDs for INR plans
-export const STRIPE_PRICES = {
-  monthly: process.env.STRIPE_PRICE_MONTHLY || '',
-  yearly: process.env.STRIPE_PRICE_YEARLY || '',
+// Price IDs for different currencies
+export const STRIPE_PRICES: Record<string, { monthly: string; yearly: string }> = {
+  USD: {
+    monthly: process.env.STRIPE_PRICE_USD_MONTHLY || '',
+    yearly: process.env.STRIPE_PRICE_USD_YEARLY || '',
+  },
+  EUR: {
+    monthly: process.env.STRIPE_PRICE_EUR_MONTHLY || '',
+    yearly: process.env.STRIPE_PRICE_EUR_YEARLY || '',
+  },
+  GBP: {
+    monthly: process.env.STRIPE_PRICE_GBP_MONTHLY || '',
+    yearly: process.env.STRIPE_PRICE_GBP_YEARLY || '',
+  },
+  INR: {
+    monthly: process.env.STRIPE_PRICE_INR_MONTHLY || process.env.STRIPE_PRICE_MONTHLY || '',
+    yearly: process.env.STRIPE_PRICE_INR_YEARLY || process.env.STRIPE_PRICE_YEARLY || '',
+  },
+  CAD: {
+    monthly: process.env.STRIPE_PRICE_CAD_MONTHLY || '',
+    yearly: process.env.STRIPE_PRICE_CAD_YEARLY || '',
+  },
+  AUD: {
+    monthly: process.env.STRIPE_PRICE_AUD_MONTHLY || '',
+    yearly: process.env.STRIPE_PRICE_AUD_YEARLY || '',
+  },
+  JPY: {
+    monthly: process.env.STRIPE_PRICE_JPY_MONTHLY || '',
+    yearly: process.env.STRIPE_PRICE_JPY_YEARLY || '',
+  },
+  BRL: {
+    monthly: process.env.STRIPE_PRICE_BRL_MONTHLY || '',
+    yearly: process.env.STRIPE_PRICE_BRL_YEARLY || '',
+  },
+  MXN: {
+    monthly: process.env.STRIPE_PRICE_MXN_MONTHLY || '',
+    yearly: process.env.STRIPE_PRICE_MXN_YEARLY || '',
+  },
+  SGD: {
+    monthly: process.env.STRIPE_PRICE_SGD_MONTHLY || '',
+    yearly: process.env.STRIPE_PRICE_SGD_YEARLY || '',
+  },
 };
 
 // Create checkout session
