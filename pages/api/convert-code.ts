@@ -10,12 +10,17 @@ import {
   ConversionResult,
 } from '../../backend/codeConverter';
 import { logApiCall } from '../../backend/mongodb';
+import { requireFeatureAccess } from '../../utils/apiFeatureGate';
 import archiver from 'archiver';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
+
+  // Check feature access
+  const access = await requireFeatureAccess(req, res, 'code-converter');
+  if (!access) return; // Response already sent
 
   const session = await getServerSession(req, res, authOptions);
   const { owner, repo, targetLanguage, targetFramework, scope, selectedFiles } = req.body;

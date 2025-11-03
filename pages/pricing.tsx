@@ -37,6 +37,43 @@ export default function PricingPage() {
     }
   }, [session]);
 
+  // Check for cancelled payment
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('cancelled') === 'true') {
+      // Show notification
+      const notification = document.createElement('div');
+      notification.className = 'fixed top-24 right-4 z-50 glass-strong border border-yellow-500/50 rounded-lg p-4 shadow-2xl animate-slide-up max-w-md';
+      notification.innerHTML = `
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h3 class="text-white font-semibold mb-1">Payment Cancelled</h3>
+            <p class="text-gray-300 text-sm">You cancelled the payment. No charges were made. Feel free to try again when you're ready!</p>
+          </div>
+          <button onclick="this.parentElement.parentElement.remove()" class="text-gray-400 hover:text-white">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      `;
+      document.body.appendChild(notification);
+      
+      // Auto-remove after 8 seconds
+      setTimeout(() => {
+        notification.remove();
+      }, 8000);
+      
+      // Clean URL
+      window.history.replaceState({}, '', '/pricing');
+    }
+  }, []);
+
   // Auto-detect user's region on mount
   useEffect(() => {
     detectUserRegion();

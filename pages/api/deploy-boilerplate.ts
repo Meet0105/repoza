@@ -4,11 +4,16 @@ import { authOptions } from './auth/[...nextauth]';
 import { createGitHubRepo, uploadMultipleFiles, getUserGitHubInfo } from '../../backend/github';
 import { generateVercelDeployUrl } from '../../backend/vercel';
 import { connectToDatabase } from '../../backend/mongodb';
+import { requireFeatureAccess } from '../../utils/apiFeatureGate';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
+
+  // Check feature access
+  const access = await requireFeatureAccess(req, res, 'one-click-deploy');
+  if (!access) return; // Response already sent
 
   // Check authentication
   const session = await getServerSession(req, res, authOptions);

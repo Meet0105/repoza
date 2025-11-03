@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { Rocket, Loader2, ExternalLink, Github } from 'lucide-react';
+import { Rocket, Loader2, ExternalLink, Github, Crown } from 'lucide-react';
 import axios from 'axios';
+import { useFeatureAccess } from '../utils/useFeatureAccess';
+import UpgradePrompt from './UpgradePrompt';
 
 interface DeployButtonProps {
   type: 'boilerplate' | 'existing';
@@ -22,12 +24,20 @@ export default function DeployButton({
   onSuccess,
 }: DeployButtonProps) {
   const { data: session } = useSession();
+  const { hasAccess, loading: checkingAccess } = useFeatureAccess('one-click-deploy');
   const [deploying, setDeploying] = useState(false);
   const [error, setError] = useState('');
+  const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
 
   const handleDeploy = async () => {
     if (!session) {
       alert('Please sign in to deploy');
+      return;
+    }
+
+    // Check feature access
+    if (!hasAccess) {
+      setShowUpgradePrompt(true);
       return;
     }
 
@@ -72,42 +82,64 @@ export default function DeployButton({
   };
 
   return (
-    <div>
-      <button
-        onClick={handleDeploy}
-        disabled={deploying || !session}
-        className="w-full px-6 py-3 bg-black hover:bg-gray-900 disabled:bg-gray-600 text-white rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors border border-white/20"
-        title={!session ? 'Sign in to deploy' : 'Deploy to Vercel'}
-      >
-        {deploying ? (
-          <>
-            <Loader2 className="w-5 h-5 animate-spin" />
-            {type === 'boilerplate' ? 'Creating repo & deploying...' : 'Preparing deployment...'}
-          </>
-        ) : (
-          <>
-            <Rocket className="w-5 h-5" />
-            Deploy to Vercel
-          </>
+    <>
+      {showUpgradePrompt && (
+        <UpgradePrompt feature="one-click-deploy" onClose={() => setShowUpgradePrompt(false)} />
+      )}
+      
+      <div>
+        <button
+          onClick={handleDeploy}
+          disabled={deploying || !session || checkingAccess}
+          className={`w-full px-6 py-3 ${
+            !hasAccess && session
+              ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'
+              : 'bg-black hover:bg-gray-900'
+          } disabled:bg-gray-600 text-white rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors border border-white/20`}
+          title={!session ? 'Sign in to deploy' : !hasAccess ? 'Pro feature' : 'Deploy to Vercel'}
+        >
+          {deploying ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              {type === 'boilerplate' ? 'Creating repo & deploying...' : 'Preparing deployment...'}
+            </>
+          ) : !hasAccess && session ? (
+            <>
+              <Crown className="w-5 h-5" />
+              Upgrade to Deploy
+            </>
+          ) : (
+            <>
+              <Rocket className="w-5 h-5" />
+              Deploy to Vercel
+            </>
+          )}
+        </button>
+
+        {!session && (
+          <p className="text-xs text-gray-400 mt-2 text-center">
+            Sign in with GitHub to deploy
+          </p>
         )}
-      </button>
 
-      {!session && (
-        <p className="text-xs text-gray-400 mt-2 text-center">
-          Sign in with GitHub to deploy
-        </p>
-      )}
+        {!hasAccess && session && (
+          <p className="text-xs text-purple-300 mt-2 text-center">
+            <Crown className="w-3 h-3 inline mr-1" />
+            Pro feature - Upgrade to unlock
+          </p>
+        )}
 
-      {type === 'boilerplate' && session && (
-        <p className="text-xs text-gray-400 mt-2 text-center">
-          <Github className="w-3 h-3 inline mr-1" />
-          Will create a new GitHub repo in your account
-        </p>
-      )}
+        {type === 'boilerplate' && session && hasAccess && (
+          <p className="text-xs text-gray-400 mt-2 text-center">
+            <Github className="w-3 h-3 inline mr-1" />
+            Will create a new GitHub repo in your account
+          </p>
+        )}
 
-      {error && (
-        <p className="text-xs text-red-400 mt-2 text-center">{error}</p>
-      )}
-    </div>
+        {error && (
+          <p className="text-xs text-red-400 mt-2 text-center">{error}</p>
+        )}
+      </div>
+    </>
   );
 }

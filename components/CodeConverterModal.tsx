@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { X, Zap, Download, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 import axios from 'axios';
+import { useFeatureAccess } from '../utils/useFeatureAccess';
+import UpgradePrompt from './UpgradePrompt';
 
 interface CodeConverterModalProps {
   owner: string;
@@ -9,12 +11,18 @@ interface CodeConverterModalProps {
 }
 
 export default function CodeConverterModal({ owner, repo, onClose }: CodeConverterModalProps) {
+  const { hasAccess, loading: checkingAccess } = useFeatureAccess('code-converter');
   const [targetLanguage, setTargetLanguage] = useState('python');
   const [targetFramework, setTargetFramework] = useState('');
   const [scope, setScope] = useState<'full' | 'selected'>('full');
   const [converting, setConverting] = useState(false);
   const [progress, setProgress] = useState('');
   const [success, setSuccess] = useState(false);
+
+  // Show upgrade prompt if no access
+  if (!checkingAccess && !hasAccess) {
+    return <UpgradePrompt feature="code-converter" onClose={onClose} />;
+  }
 
   const languages = [
     { id: 'python', name: 'Python', framework: 'Django/Flask', icon: '🐍' },

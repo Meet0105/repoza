@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { MessageCircle, Send, Sparkles, FileText, Loader2, AlertCircle } from 'lucide-react';
 import axios from 'axios';
+import { useFeatureAccess } from '../utils/useFeatureAccess';
+import UpgradePrompt from './UpgradePrompt';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -15,10 +17,20 @@ interface RepoQAProps {
 }
 
 export default function RepoQA({ repoId, isIndexed, onIndexRequest }: RepoQAProps) {
+    const { hasAccess, loading: checkingAccess } = useFeatureAccess('repo-qa');
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
     const [showChat, setShowChat] = useState(false);
+
+    // Show inline upgrade prompt if no access
+    if (!checkingAccess && !hasAccess) {
+        return (
+            <div className="mt-8">
+                <UpgradePrompt feature="repo-qa" inline />
+            </div>
+        );
+    }
 
     const suggestedQuestions = [
         'What database does this use?',

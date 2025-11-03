@@ -3,6 +3,8 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
 import ProtectedRoute from '../components/ProtectedRoute';
+import UpgradePrompt from '../components/UpgradePrompt';
+import { useFeatureAccess } from '../utils/useFeatureAccess';
 import {
   GraduationCap,
   Sparkles,
@@ -32,6 +34,7 @@ export default function Learn() {
 function LearnContent() {
   const router = useRouter();
   const { data: session } = useSession();
+  const { hasAccess, loading: checkingAccess } = useFeatureAccess('learning-path');
   const [topic, setTopic] = useState('');
   const [currentLevel, setCurrentLevel] = useState('Beginner');
   const [loading, setLoading] = useState(false);
@@ -134,6 +137,20 @@ function LearnContent() {
   const progressPercentage = learningPath
     ? Math.round((completedSteps.length / learningPath.steps.length) * 100)
     : 0;
+
+  // Show upgrade prompt if no access
+  if (!checkingAccess && !hasAccess) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 text-white pt-20">
+        <Navbar />
+        <div className="container mx-auto px-4 py-12">
+          <div className="max-w-2xl mx-auto">
+            <UpgradePrompt feature="learning-path" inline />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 text-white pt-20">

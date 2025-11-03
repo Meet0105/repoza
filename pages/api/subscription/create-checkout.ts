@@ -53,7 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       customerEmail: session.user.email,
       priceId,
       successUrl: `${process.env.NEXTAUTH_URL}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancelUrl: `${process.env.NEXTAUTH_URL}/pricing`,
+      cancelUrl: `${process.env.NEXTAUTH_URL}/pricing?cancelled=true`,
     });
 
     // Return checkout URL

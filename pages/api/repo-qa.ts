@@ -2,11 +2,16 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { generateEmbedding, answerQuestionWithContext } from '../../backend/gemini';
 import { queryRepoEmbeddings } from '../../backend/pinecone';
 import { logApiCall } from '../../backend/mongodb';
+import { requireFeatureAccess } from '../../utils/apiFeatureGate';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
+
+  // Check feature access
+  const access = await requireFeatureAccess(req, res, 'repo-qa');
+  if (!access) return; // Response already sent
 
   const { repoId, question } = req.body;
 

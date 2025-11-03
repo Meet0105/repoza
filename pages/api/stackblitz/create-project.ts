@@ -5,6 +5,7 @@ import { detectFramework, getSupportedFrameworks } from '../../../backend/framew
 import { fetchRepoForStackBlitz } from '../../../backend/stackblitzFetcher';
 import { generateStackBlitzProject } from '../../../backend/stackblitzGenerator';
 import { connectToDatabase } from '../../../backend/mongodb';
+import { requireFeatureAccess } from '../../../utils/apiFeatureGate';
 
 interface CreateProjectRequest {
   owner: string;
@@ -29,6 +30,10 @@ export default async function handler(
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, error: 'Method not allowed' });
   }
+
+  // Check feature access
+  const access = await requireFeatureAccess(req, res, 'live-preview');
+  if (!access) return; // Response already sent
 
   try {
     const { owner, repo, branch = 'main' }: CreateProjectRequest = req.body;

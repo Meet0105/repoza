@@ -142,3 +142,11 @@ export function isPro(subscription: any): boolean {
 export function isFree(subscription: any): boolean {
   return !subscription || subscription?.plan === 'free' || subscription?.status !== 'active';
 }
+
+export async function checkSubscriptionStatus(email: string): Promise<{ isPro: boolean; subscription: any }> {
+  const subscription = await getUserSubscription(email);
+  return {
+    isPro: isPro(subscription),
+    subscription
+  };
+}

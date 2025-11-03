@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import sdk from '@stackblitz/sdk';
+import { useFeatureAccess } from '../utils/useFeatureAccess';
+import UpgradePrompt from './UpgradePrompt';
 
 interface LivePreviewModalProps {
     owner: string;
@@ -26,6 +28,7 @@ export default function LivePreviewModal({
     branch = 'main',
     onClose,
 }: LivePreviewModalProps) {
+    const { hasAccess, loading: checkingAccess } = useFeatureAccess('live-preview');
     const [state, setState] = useState<PreviewState>({
         status: 'idle',
         progress: 0,
@@ -40,9 +43,16 @@ export default function LivePreviewModal({
     const [stackblitzUrl, setStackblitzUrl] = useState<string | null>(null);
     const iframeContainerRef = useRef<HTMLDivElement>(null);
 
+    // Show upgrade prompt if no access
+    if (!checkingAccess && !hasAccess) {
+        return <UpgradePrompt feature="live-preview" onClose={onClose} />;
+    }
+
     useEffect(() => {
-        createPreview();
-    }, []);
+        if (hasAccess) {
+            createPreview();
+        }
+    }, [hasAccess]);
 
     const createPreview = async () => {
         try {
@@ -296,4 +306,4 @@ export default function LivePreviewModal({
             </div>
         </div>
     );
-}
+}

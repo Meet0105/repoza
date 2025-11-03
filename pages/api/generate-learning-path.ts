@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { generateText } from '../../backend/gemini';
+import { requireFeatureAccess } from '../../utils/apiFeatureGate';
 import axios from 'axios';
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
@@ -25,6 +26,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
+
+  // Check feature access
+  const access = await requireFeatureAccess(req, res, 'learning-path');
+  if (!access) return; // Response already sent
 
   const { topic, currentLevel } = req.body;
 
