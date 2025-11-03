@@ -27,8 +27,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Get price ID based on billing cycle
     const priceId = billingCycle === 'yearly' ? STRIPE_PRICES.yearly : STRIPE_PRICES.monthly;
 
+    // Better error message if price not configured
     if (!priceId) {
-      return res.status(500).json({ error: 'Plan not configured' });
+      console.error('Stripe price not configured:', { billingCycle, STRIPE_PRICES });
+      return res.status(500).json({ 
+        error: 'Subscription plan not configured. Please contact support.',
+        details: 'Missing Stripe Price ID in environment variables'
+      });
+    }
+
+    // Check if Stripe key is configured
+    if (!process.env.STRIPE_SECRET_KEY) {
+      console.error('Stripe secret key not configured');
+      return res.status(500).json({ 
+        error: 'Payment system not configured. Please contact support.',
+        details: 'Missing Stripe Secret Key'
+      });
     }
 
     // Create Stripe checkout session
@@ -45,6 +59,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   } catch (error: any) {
     console.error('Error creating checkout session:', error);
-    res.status(500).json({ error: 'Failed to create checkout session' });
+    res.status(500).json({ 
+      error: 'Failed to create checkout session',
+      details: error.message 
+    });
   }
 }
