@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Terminal, Download, Copy, CheckCircle, AlertCircle, Laptop, Monitor, Apple } from 'lucide-react';
+import { Terminal, Copy, CheckCircle, AlertCircle, Laptop, Monitor, Apple } from 'lucide-react';
 import axios from 'axios';
-import ReactMarkdown from 'react-markdown';
+import ReadmeRenderer from './ReadmeRenderer';
 
 type Props = {
   owner: string;
@@ -194,59 +194,7 @@ export default function SetupGuide({ owner, repo, readme }: Props) {
 
           {/* Guide Content */}
           <div className="glass-light rounded-lg p-6 border border-white/10">
-            <div className="prose prose-invert prose-cyan max-w-none">
-              <ReactMarkdown
-                components={{
-                  h1: ({ node, ...props }) => (
-                    <h1 className="text-2xl font-bold gradient-text-primary mb-4" {...props} />
-                  ),
-                  h2: ({ node, ...props }) => (
-                    <h2 className="text-xl font-bold text-white mt-6 mb-3" {...props} />
-                  ),
-                  h3: ({ node, ...props }) => (
-                    <h3 className="text-lg font-semibold text-gray-200 mt-4 mb-2" {...props} />
-                  ),
-                  p: ({ node, ...props }) => (
-                    <p className="text-gray-300 mb-3 leading-relaxed" {...props} />
-                  ),
-                  code: ({ node, inline, ...props }: any) =>
-                    inline ? (
-                      <code
-                        className="glass-light text-cyan-400 px-2 py-0.5 rounded text-sm font-mono border border-cyan-500/20"
-                        {...props}
-                      />
-                    ) : (
-                      <code
-                        className="block glass-strong text-gray-200 p-4 rounded-lg overflow-x-auto text-sm font-mono border border-white/20 shadow-lg"
-                        {...props}
-                      />
-                    ),
-                  pre: ({ node, ...props }) => (
-                    <pre className="glass-strong rounded-lg overflow-x-auto mb-4 border border-white/10" {...props} />
-                  ),
-                  ul: ({ node, ...props }) => (
-                    <ul className="list-disc list-inside text-gray-300 space-y-2 mb-4" {...props} />
-                  ),
-                  ol: ({ node, ...props }) => (
-                    <ol className="list-decimal list-inside text-gray-300 space-y-2 mb-4" {...props} />
-                  ),
-                  li: ({ node, ...props }) => (
-                    <li className="text-gray-300 ml-4" {...props} />
-                  ),
-                  strong: ({ node, ...props }) => (
-                    <strong className="text-white font-semibold" {...props} />
-                  ),
-                  blockquote: ({ node, ...props }) => (
-                    <blockquote
-                      className="border-l-4 border-cyan-500 pl-4 italic text-gray-400 my-4"
-                      {...props}
-                    />
-                  ),
-                }}
-              >
-                {setupGuide}
-              </ReactMarkdown>
-            </div>
+            <ReadmeRenderer content={setupGuide} />
           </div>
 
           {/* Quick Actions */}

@@ -2,7 +2,6 @@ import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Star, GitFork, Eye, AlertCircle, Code2, Calendar, Sparkles, ExternalLink, Copy, ArrowLeft, Folder, File, ChevronRight, ChevronDown, FolderOpen, Zap, Heart } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
 import Link from 'next/link';
 import { saveRepoHistory } from '../../../utils/history';
 import Navbar from '../../../components/Navbar';
@@ -15,6 +14,7 @@ import LivePreviewModal from '../../../components/LivePreviewModal';
 import AddToCollectionModal from '../../../components/AddToCollectionModal';
 import DependencyAnalyzer from '../../../components/DependencyAnalyzer';
 import SetupGuide from '../../../components/SetupGuide';
+import ReadmeRenderer from '../../../components/ReadmeRenderer';
 import { useSession } from 'next-auth/react';
 
 // File tree node component
@@ -507,12 +507,15 @@ export default function RepoDetails() {
 
                 {/* README */}
                 {readme && (
-                    <div className="mb-8">
-                        <h2 className="text-xl font-semibold mb-3">README</h2>
-                        <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
-                            <div className="markdown-content">
-                                <ReactMarkdown>{readme}</ReactMarkdown>
-                            </div>
+                    <div className="mb-8 animate-slide-up">
+                        <div className="flex items-center gap-3 mb-4">
+                            <h2 className="text-2xl font-bold gradient-text-primary">README</h2>
+                            <span className="text-xs bg-cyan-500/20 text-cyan-300 px-2 py-1 rounded">
+                                Beautifully Rendered
+                            </span>
+                        </div>
+                        <div className="glass-strong rounded-xl p-8 border border-white/10 shadow-xl">
+                            <ReadmeRenderer content={readme} />
                         </div>
                     </div>
                 )}
