@@ -227,6 +227,38 @@ html {
   }
 }
 
+@keyframes scale-up {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
+  70% {
+    transform: scale(0.9);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
 .animate-gradient {
   background-size: 200% 200%;
   animation: gradient-shift 3s ease infinite;
@@ -252,6 +284,14 @@ html {
 
 .animate-fade-in {
   animation: fade-in 0.3s ease-out;
+}
+
+.animate-scale-up {
+  animation: scale-up 0.3s ease-out;
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.5s ease-out;
 }
 
 /* ============================================
@@ -393,6 +433,65 @@ html {
 
 .badge-green {
   @apply badge bg-green-500/20 text-green-400 border border-green-500/30;
+}
+
+/* ============================================
+   LOADING & SKELETON STYLES
+   ============================================ */
+
+.skeleton {
+  @apply bg-gray-700 animate-pulse rounded;
+}
+
+.skeleton-text {
+  @apply skeleton h-4 w-full mb-2;
+}
+
+.skeleton-title {
+  @apply skeleton h-6 w-3/4 mb-4;
+}
+
+.skeleton-circle {
+  @apply skeleton rounded-full;
+}
+
+/* Loading Spinner */
+.spinner {
+  border: 3px solid rgba(6, 182, 212, 0.1);
+  border-top-color: #06B6D4;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================
+   TOAST NOTIFICATION STYLES
+   ============================================ */
+
+.toast {
+  @apply fixed top-24 right-4 z-50 glass-strong rounded-lg p-4 shadow-2xl;
+  @apply animate-slide-up max-w-md;
+}
+
+.toast-success {
+  @apply toast border border-green-500/50;
+}
+
+.toast-error {
+  @apply toast border border-red-500/50;
+}
+
+.toast-warning {
+  @apply toast border border-yellow-500/50;
+}
+
+.toast-info {
+  @apply toast border border-cyan-500/50;
 }
 
 /* ============================================

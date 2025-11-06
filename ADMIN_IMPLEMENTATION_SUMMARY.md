@@ -9,7 +9,7 @@
 - ✅ "Test Key" functionality to validate keys
 - ✅ "Save" button to store keys in MongoDB
 - ✅ Dynamic key retrieval for API calls
-- ✅ Secure storage in `api_keys` collection
+- ✅ Secure storage in `api_keys` co  llection
 
 #### 2. **Theme Settings**
 - ✅ Theme mode selector (Light/Dark)
