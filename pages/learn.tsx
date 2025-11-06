@@ -200,11 +200,14 @@ function LearnContent() {
                   <select
                     value={currentLevel}
                     onChange={(e) => setCurrentLevel(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cyan-500"
+                    className="w-full bg-gray-800 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition-all duration-300"
+                    style={{
+                      colorScheme: 'dark'
+                    }}
                   >
-                    <option value="Beginner">Beginner</option>
-                    <option value="Intermediate">Intermediate</option>
-                    <option value="Advanced">Advanced</option>
+                    <option value="Beginner" className="bg-gray-800 text-white">Beginner</option>
+                    <option value="Intermediate" className="bg-gray-800 text-white">Intermediate</option>
+                    <option value="Advanced" className="bg-gray-800 text-white">Advanced</option>
                   </select>
                 </div>
 
